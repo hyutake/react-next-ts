@@ -29,7 +29,6 @@ export const User = () => {
         <div>
             <h1 className="text-3xl font-bold">Client Session</h1>
             {renderSessionData(data?.user)}
-            {/* <pre>{JSON.stringify(data)}</pre> */}
         </div>
     )
 }

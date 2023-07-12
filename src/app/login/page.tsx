@@ -1,36 +1,49 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const LoginPage: React.FC = () => {
 	const usernameRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
 
+	const [error, setError] = useState<string>('');
+
+	const router = useRouter();
+
 	const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		// username and password will most likely have values, thanks to the 'required' prop, but you can technically remove that manually
+		// username and password will most likely have values, thanks to the 'required' prop, BUT it is possible to remove that manually
 		const username = usernameRef.current?.value || '';
 		const password = passwordRef.current?.value || '';
-		console.log("Username: " + username);
-		console.log("Password: " + password);
 
 		// result will resolve to an object with { error: , status: , ok: , url:  } for CredentialsProvider
-		const result = await signIn("credentials", {
+		// if an error or null was thrown in authorize(), it (or CredentialsSignIn for null) will be "placed" as a string in 'error'
+		const result = await signIn("login", {
 			username,
 			password,
-			redirect: false,		// to deal with errors on the same page
+			redirect: false,		// to handle any errors (invalid credentials) on the same page
 		})
 
-		console.log(result);
+		if(result && result.error) {
+			const errors = JSON.parse(result.error);
+			setError(errors.credentials);
+		} else {
+			setError('');
+			router.push('/');
+		}
 	};
 
 	return (
 		<>
 			<form onSubmit={submitHandler} className="w-full max-w-2xl my-8 mx-auto">
-				<h1 className="text-4xl font-bold mb-4">Login</h1>
+				<div className=" text-center">
+					<h1 className="text-4xl font-bold mb-4">Login</h1>
+					<p className="italic">{error}</p>
+				</div>
 				<p className="mb-2">
 					<label className="w-full block font-semibold" htmlFor="username">
 						Username

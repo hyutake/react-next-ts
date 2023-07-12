@@ -1,10 +1,6 @@
-import Layout from "@/components/Layout/Layout";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { NextAuthProvider } from "./providers";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Provider } from "./providers";
 
 export const metadata: Metadata = {
 	title: "Practice Next TS app",
@@ -18,10 +14,10 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
-				<NextAuthProvider>
-					<Layout>{children}</Layout>
-				</NextAuthProvider>
+			<body>
+				<Provider>
+					{children}
+				</Provider>
 			</body>
 		</html>
 	);

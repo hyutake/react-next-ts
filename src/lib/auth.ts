@@ -1,12 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-type AuthResponseObj = {
-  token: string;
-  id: string;
-}
-
-// To configure the NextAuth API handler... or smth like that
+// To configure the NextAuth API handler... or smth like that 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
@@ -14,7 +9,7 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      id: "login",
       credentials: {
         username: { label: "Username", type: "text", placeholder: "Enter username here..." },
         password: { label: "Password", type: "password", placeholder: "Enter password here..." },
@@ -30,11 +25,16 @@ export const authOptions: NextAuthOptions = {
             headers: { "Content-Type" : 'application/json' }
         })
 
-        const user: AuthResponseObj = await response.json();
+        const data = await response.json();
 
-        if(response.ok && user) return user;
-        
-        return null;
+        if(response.status === 422) {   // backend will return validation errors back as a res with status 422
+          console.log(data.message);
+          throw new Error(JSON.stringify(data.errors));
+        }
+
+        if(response.ok && data) return data;  // login is authenticated by backend, will return user-specific identification info
+
+        return null;  // throws 'CredentialsSignIn' as an error automatically, which will affect the return value of signIn()
       },
     }),
   ],
