@@ -12,10 +12,17 @@ export const User = () => {
     }
 
     const renderSessionData = (sessionData: any) => {
-        // sessionData: { user: { sub: , token: , id: , iat: , exp: , jti:  } }
+        // sessionData: { sub: , token: , id: , iat: , exp: , jti: }
         return (
             <ul>
                 {Object.keys(sessionData).map(key => {
+                    if(key === 'iat' || key === 'exp') {    // iat & exp represent the # of seconds since EPOCH (1970-01-01T00:00:00Z) apparently
+                        const formattedDate = new Date(sessionData[key] * 1000).toLocaleString('en-US', {timeZone: 'Asia/Singapore'});
+                        return <li key={key}>
+                        <strong>{key}: </strong>
+                        <span className="italic">{`${formattedDate} (value: ${sessionData[key]})`}</span>
+                    </li>
+                    }
                     return <li key={key}>
                         <strong>{key}: </strong>
                         <span className="italic">{sessionData[key]}</span>

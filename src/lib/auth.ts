@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60,  // 1 hour
+    maxAge: 60 * 60,  // 1 hour -> refers to the maximum IDLE time allowed before the token is expired (if jwt() is called it gets refreshed)
   },
   providers: [
     CredentialsProvider({
@@ -44,7 +44,20 @@ export const authOptions: NextAuthOptions = {
     // 'user' is the return value of authorize(), but this is for CredentialProvider only (I think?)
     jwt: async ({ token, user }) => {
       // you can persist data (from those "limited edition" parameters) by 'attaching' it to token
-      return { ...token, ...user };
+      console.log("=== JWT CALLBACK ===");
+      if(user && user.id) {
+        return { ...token, ...user };
+      }
+
+      // TODO: implement token expiry somehow :/ iat and exp get refreshed somehow when session is checked
+      if(token && token.exp) {
+        const now = new Date();
+        const expiryDateInEpochSeconds: number = token.exp as number;
+        if(now > new Date(expiryDateInEpochSeconds * 1000)) {
+          console.log("Token expired!");
+        }
+      }
+      return token;
     },
     // session callback is called whenever a session for the user is checked
     // note that the 'token' in the input arg IS the return value of jwt() - jwt() is ALWAYS called BEFORE session()
