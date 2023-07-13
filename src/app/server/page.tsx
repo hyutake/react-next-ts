@@ -17,6 +17,7 @@ const ServerPage = async () => {
 						<h2 className="text-2xl font-bold text-white">Server Session</h2>
 						<p>Id: {user.id}</p>
 						<p>Token: {user.token}</p>
+						<p>TokenExpiry: {user.tokenExpiry}</p>
 					</div>
 				)}
 			</div>
