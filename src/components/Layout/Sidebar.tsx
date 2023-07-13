@@ -17,7 +17,7 @@ export const SideBarList: React.FC<SideBarListProps> = ({
 	return (
 		<ul className={`hover:cursor-pointer ${className}`}>
 			{[
-				{ name: "menu.aimtrainer", label: "Aim Trainer", link: "/aim" },
+				{ name: "menu.game", label: "Game", link: "/game" },
 			].map((item) => {
 				const isActive = pathname.startsWith(item.link);
 				return (
