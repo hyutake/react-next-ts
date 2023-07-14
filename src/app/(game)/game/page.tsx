@@ -1,6 +1,7 @@
 "use client";
 
-import CardGrid from "@/components/Card/CardGrid";
+import CardWindow from "@/components/Card/CardWindow";
+import Banner from "@/components/Player/Banner";
 
 const GamePage: React.FC = () => {
 	// get session info here -> if access token has expired (isExpired = true), then show a modal with some explanation text and the option to logout
@@ -31,8 +32,10 @@ const GamePage: React.FC = () => {
 	*/
 
 	return (
-		<div className="flex flex-col items-center justify-center">
-			<CardGrid />
+		<div className="flex justify-evenly">
+			<Banner label="Player" />
+			<CardWindow />
+			<Banner label="AI" />
 		</div>
 	);
 };

@@ -36,7 +36,7 @@ export const SideBarList: React.FC<SideBarListProps> = ({
 
 const Sidebar: React.FC = () => {
     return (
-      <aside className="bg-white text-cool-gray-90 md:w-64 w-40 md:flex hidden">
+      <aside className="bg-white text-cool-gray-90 md:w-48 w-32 md:flex hidden">
         {<SideBarList className="w-full" itemClassName="p-4" />}
       </aside>
     );
