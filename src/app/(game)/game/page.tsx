@@ -2,6 +2,14 @@
 
 import CardWindow from "@/components/Card/CardWindow";
 import Banner from "@/components/Player/Banner";
+import { useState } from "react";
+
+interface PlayerRecord {
+	score: number;
+	attemptsToComplete: number;
+}
+
+const initialPlayerRecord = { score: 0, attemptsToComplete: 0 };
 
 const GamePage: React.FC = () => {
 	// get session info here -> if access token has expired (isExpired = true), then show a modal with some explanation text and the option to logout
@@ -31,10 +39,35 @@ const GamePage: React.FC = () => {
 			- Needs a decent narrative (with many branching paths) since this is gonna have to be carried by the text content (and maybe minigames)
 	*/
 
+	const [playerRecord, setPlayerRecord] = useState<PlayerRecord>(initialPlayerRecord);
+
+	// NOTE: algo here is for SOLO play
+	const updatePlayerRecord = (matchedCards: boolean, resetScore:boolean = false) => {
+		if(resetScore) {
+			setPlayerRecord(initialPlayerRecord);
+			return;
+		}
+
+		if(matchedCards) {
+			setPlayerRecord(prevState => {
+				// matched the 9th pair - 10th pair is a freebie
+				if(prevState.score === 9) {
+					console.log("Game ended!");
+					return {score: prevState.score + 1, attemptsToComplete: prevState.attemptsToComplete + 1};
+				}
+				return {score: prevState.score + 1, attemptsToComplete: prevState.attemptsToComplete + 1};
+			})
+		} else {
+			setPlayerRecord(prevState => {
+				return {score: prevState.score, attemptsToComplete: prevState.attemptsToComplete + 1};
+			})
+		}
+	}
+
 	return (
 		<div className="flex justify-evenly">
-			<Banner label="Player" />
-			<CardWindow />
+			<Banner label="Player" score={playerRecord.score} attempts={playerRecord.attemptsToComplete} />
+			<CardWindow updateScore={updatePlayerRecord}/>
 			<Banner label="AI" />
 		</div>
 	);

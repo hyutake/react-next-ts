@@ -44,20 +44,20 @@ const Card: React.FC<CardProps> = ({ imageSrc = hkBack, registerClick, forceHide
 
 	const cardBack = (
 		<div className="absolute inset-0 h-full w-full rounded-xl text-center text-black flex flex-col items-center justify-center">
-			<Image src={hkBack} alt="" priority={true} />
+			<Image src={hkBack} alt="" priority={true} draggable={false} />
 		</div>
 	);
 
 	const cardFront = (
 		<div className="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
-            <Image src={imageSrc} alt="" />
+            <Image src={imageSrc} alt="" draggable={false} />
         </div>
 	);
 
 	return (
         <div className="relative group" onClick={clickHandler}>
-            <div className="absolute inset-0 bg-gradient-to-tl from-blue-300 to-blue-700 rounded-xl group-hover:blur-lg duration-1000 group-hover:duration-200"></div>
-            <div className="relative h-48 w-32 cursor-pointer group-hover:-translate-y-2 group-hover:duration-200 duration-500">
+            <div className={`absolute inset-0 bg-gradient-to-tl from-blue-300 to-blue-800 rounded-xl ${isRevealed ? 'blur-md':'' } group-hover:blur-lg duration-1000 group-hover:duration-200`}></div>
+            <div className={`relative h-48 w-32 cursor-pointer group-hover:-translate-y-2 duration-500`}>
                 <div className={`relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] ${isRevealed ? '[transform:rotateY(180deg)]' : ''}`}>
                     {cardBack}
                     {cardFront}

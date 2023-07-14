@@ -36,7 +36,11 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
 };
 /* END Deck management */
 
-const CardWindow: React.FC = () => {
+interface CardWindowProps {
+	updateScore: (matchedCards: boolean, resetScore?: boolean) => void
+}
+
+const CardWindow: React.FC<CardWindowProps> = ({ updateScore }) => {
     // single state var to store the 1st card's data
 	const [first, setFirst] = useState<CardTrackingData>();
     // to store the deck
@@ -53,9 +57,7 @@ const CardWindow: React.FC = () => {
 	// uuid: Unique card id regardless of actual cardId -> to check for repeated clicks on the same card
 	const clickCard = (cardId: string, uuid: string, hideCard: () => void) => {
 		// need to pick and choose which state var to assign id to
-		if (first !== undefined) {
-			// second card clicked
-			console.log("Second card: " + cardId);
+		if (first !== undefined) {	// second card clicked
             // check for double clicking
             if (uuid === first.uuid) {
                 console.log("Same card clicked!");
@@ -65,26 +67,25 @@ const CardWindow: React.FC = () => {
 			setTimeout(() => {
 				// check if matching
 				if (first.cardId === cardId) {
-					console.log("Matching cards!");
+					updateScore(true);
 				} else {
-					console.log("Not matching!");
-					// need to trigger a rotate back of the cards somehow
+					updateScore(false);
 					first.hideCard();
 					hideCard(); // second cards' hideCard()
 				}
 				setFirst(undefined); // reset state var
 			}, 1000);
-		} else {
-			// first card clicked
+		} else {	// first card clicked
 			setFirst({ cardId, uuid, hideCard });
-			console.log("First card: " + cardId);
 		}
 	};
 
     const resetHandler = () => {
         // need some way to force-hide all the cards
         // current impl: forceHide: boolean -> everytime this changes between true and false, trigger a hideCard for all cards
-        setForceHide((prevState) => !prevState); // trying this out
+        setForceHide((prevState) => !prevState); // (should) hide all 'revealed' cards
+		updateScore(false, true);	// reset player score
+		setFirst(undefined);
         setTimeout(() => {
             setDeck(initializeDeck());  // reshuffle cards -> change postions of cards
         }, 500);
