@@ -1,19 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import CardGrid from "@/components/Card/CardGrid";
 import RefreshButton from "@/components/Card/RefreshButton";
 
 interface CardData {
     cardId: string;
-    uuid: string;
+    uid: string;
+	isRevealed: boolean;
+	matchedBy: string;
 }
 
-interface CardTrackingData extends CardData {
-	hideCard: () => void;
-};
-
-/* Deck management */
 const UNIQUE_CARD_ID = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]): CardData[] => {
@@ -28,73 +25,178 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
     for(let i = 0; i < cards.length; i++) {
         deck.push({
             cardId: cards[i],
-            uuid: `c_${i}`,
+            uid: `c_${i}`,
+			isRevealed: false,
+			matchedBy: ''
         })
     }
-
 	return deck;
 };
-/* END Deck management */
 
 interface CardWindowProps {
-	updateScore: (matchedCards: boolean, resetScore?: boolean) => void
+	updateUserRecord: (matchedCards: boolean, resetScore?: boolean) => void;
+	updateAIRecord: (matchedCards: boolean, resetScore?: boolean) => void;
 }
 
-const CardWindow: React.FC<CardWindowProps> = ({ updateScore }) => {
-    // single state var to store the 1st card's data
-	const [first, setFirst] = useState<CardTrackingData>();
+const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecord }) => {
     // to store the deck
     const [deck, setDeck] = useState<CardData[]>([]);
-    // to hide all cards
-    const [forceHide, setForceHide] = useState<boolean>(false);
+	// to record the first card data
+	const [first, setFirst] = useState<{ cardId: string, uid: string }>();
+	// to prevent additional cards being revealed and evaluated (otherwise the game logic gets messed up)
+	const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
+	// to track whose turn is it
+	const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
 
     // only initialize the deck on client-side
     useEffect(() => {
         setDeck(initializeDeck());
     },[]);
 
-	// cardId: To denote whether 2 cards match or not
-	// uuid: Unique card id regardless of actual cardId -> to check for repeated clicks on the same card
-	const clickCard = (cardId: string, uuid: string, hideCard: () => void) => {
-		// need to pick and choose which state var to assign id to
-		if (first !== undefined) {	// second card clicked
-            // check for double clicking
-            if (uuid === first.uuid) {
-                console.log("Same card clicked!");
-                return;
-            }
-            // delay the evaluation so that animation plays
+	// updates a single CardData element in deck
+	const updateDeck = (newCard: CardData) => {
+		setDeck((prevDeck) => {
+			const newDeck = prevDeck.map(card => {
+				if(card.uid === newCard.uid) {
+					return newCard;
+				}
+				return card;
+			});
+			return newDeck;
+		})
+	}
+
+	// sets all the
+	const hideDeck = () => {
+		setDeck((prevDeck) => {
+			return prevDeck.map(card => {
+				return {cardId: card.cardId, uid: card.uid, isRevealed: false, matchedBy: ''};
+			})
+		})
+	}
+
+	const endCurrentTurn = () => {
+		setIsPlayerTurn((prevState) => !prevState);
+		console.log("Jobs done!");
+	}
+
+	const updateScore = (matched: boolean) => {
+		isPlayerTurn ? updateUserRecord(matched) : updateAIRecord(matched);
+	}
+
+	const resetScores = () => {
+		updateUserRecord(false, true);
+		updateAIRecord(false, true);
+	}
+
+	// id: To denote whether 2 cards match or not
+	// uid: Unique card id regardless of actual id -> to check for repeated clicks on the same card
+	const clickCard = (cardId: string, uid: string) => {
+		if(isEvaluating) {
+			console.log('Currently evaluating...');
+			return;
+		}
+		console.log(`cardId: ${cardId}, uid: ${uid}`);
+		if (first) {	// second card clicked
+			updateDeck({ cardId, uid, isRevealed: true, matchedBy: ''});
+			setIsEvaluating(true);
 			setTimeout(() => {
 				// check if matching
 				if (first.cardId === cardId) {
+					console.log("Matching!");
+					setDeck(prevDeck => {
+						return prevDeck.map(card => {
+							if(card.cardId === cardId) {
+								return { 
+									cardId: card.cardId, 
+									uid: card.uid,
+									isRevealed: false,
+									matchedBy: `${isPlayerTurn ? 'player' : 'ai'}`,
+								}
+							};
+							return card;
+						})
+					});
 					updateScore(true);
 				} else {
+					console.log("Not matching!");
+					setDeck(prevDeck => {
+						return prevDeck.map(card => {
+							if(card.isRevealed) {
+								return { ...card, isRevealed: false };
+							}
+							return card;
+						})
+					});
 					updateScore(false);
-					first.hideCard();
-					hideCard(); // second cards' hideCard()
 				}
-				setFirst(undefined); // reset state var
+				setFirst(undefined);
+				setIsEvaluating(false);
+				endCurrentTurn();
 			}, 1000);
 		} else {	// first card clicked
-			setFirst({ cardId, uuid, hideCard });
+			updateDeck({ cardId, uid, isRevealed: true, matchedBy: ''});
+			setFirst({cardId, uid});
 		}
 	};
 
+	
+
     const resetHandler = () => {
-        // need some way to force-hide all the cards
-        // current impl: forceHide: boolean -> everytime this changes between true and false, trigger a hideCard for all cards
-        setForceHide((prevState) => !prevState); // (should) hide all 'revealed' cards
-		updateScore(false, true);	// reset player score
-		setFirst(undefined);
+		resetScores();
+		setFirst(undefined);	// "clear" state var (otherwise it might check for a match on the first reveal)
+		hideDeck();
+		// reshuffle cards -> change postions of cards (timeout used so that forceHide triggers and flips all the revealed cards over first)
         setTimeout(() => {
-            setDeck(initializeDeck());  // reshuffle cards -> change postions of cards
+            setDeck(initializeDeck()); 
         }, 500);
     }
 
+	// pseudo AI "decision maker"
+	const AiTurnManager = useCallback(() => {
+		const availableOptions: CardData[] = deck.filter(card => {
+			return card.matchedBy === '';
+		});
+
+		if(availableOptions.length === 0) {	// game ended
+			console.log("No more available options!");
+			return;
+		}
+
+		// Completely random
+		const firstChoice = Math.floor(Math.random() * availableOptions.length);
+		let secondChoice = Math.floor(Math.random() * availableOptions.length);
+		while(secondChoice === firstChoice) {
+			secondChoice = Math.floor(Math.random() * availableOptions.length);
+		}
+
+		triggerAiClick(availableOptions[firstChoice].uid, 500);
+		triggerAiClick(availableOptions[secondChoice].uid, 1000);
+	}, [deck])
+
+	const triggerAiClick = (cardId: string, delay: number) => {
+		// console.log('Choice: ' + cardId);
+		const choice = document.getElementById(cardId);
+		if(choice) {
+			setTimeout(() => {
+				choice.click();
+			}, delay);
+		} else {
+			console.log("Invalid cardId of " + cardId + "!");
+		}
+	}
+
+	useEffect(() => {
+		if(!isPlayerTurn && !isEvaluating) {
+			AiTurnManager();
+		}
+	}, [AiTurnManager, isEvaluating, isPlayerTurn])
+
 	return (
 		<div className="flex flex-col items-center justify-center bg-cool-gray-100 py-2">
-			<CardGrid deck={deck} onClickCard={clickCard} forceHide={forceHide} />
+			<CardGrid deck={deck} onClickCard={clickCard} />
 			<RefreshButton onClick={resetHandler} />
+			<button onClick={AiTurnManager}>TEST AI CLICK</button>
 		</div>
 	);
 }

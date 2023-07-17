@@ -14,10 +14,12 @@ import quirrelImg from "../../../public/quirrel_front.png";
 import nailsmithImg from "../../../public/nailsmith_front.png";
 import hkBack from "../../../public/hk_back.png";
 
-type CardData = {
-	cardId: string;
-	uuid: string;
-};
+interface CardData {
+    cardId: string;
+    uid: string;
+	isRevealed: boolean;
+	matchedBy: string;
+}
 
 const setImage = (id: string) => {
 	let imgSrc;
@@ -60,20 +62,21 @@ const setImage = (id: string) => {
 
 type CardGridProps = {
 	deck: CardData[];
-	onClickCard: (cardId: string, uuid: string, hideCard: () => void) => void;
-    forceHide: boolean;
+	onClickCard: (cardId: string, uid: string) => void;
 };
 
-const CardGrid: React.FC<CardGridProps> = ({ deck, onClickCard, forceHide }) => {
+const CardGrid: React.FC<CardGridProps> = ({ deck, onClickCard }) => {
 	return (
 		<div className="grid grid-cols-5 py-2 px-4 gap-5">
 			{deck.map((card) => {
 				return (
 					<Card
-						key={card.uuid}
+						key={card.uid}
+						id={card.uid}
 						imageSrc={setImage(card.cardId)}
-						registerClick={onClickCard.bind(null, card.cardId, card.uuid)}
-                        forceHide={forceHide}
+						registerClick={onClickCard.bind(null, card.cardId, card.uid)}
+                        isRevealed={card.isRevealed}
+						matchedBy={card.matchedBy}
 					/>
 				);
 			})}
