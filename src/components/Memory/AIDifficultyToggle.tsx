@@ -4,9 +4,9 @@ import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
 // images
-import attunedBadge from "../../../public/attuned.png";
-import ascendedBadge from "../../../public/ascended.png";
-import radiantBadge from "../../../public/radiant.png";
+import attunedBadge from "../../../public/memory-game/attuned.png";
+import ascendedBadge from "../../../public/memory-game/ascended.png";
+import radiantBadge from "../../../public/memory-game/radiant.png";
 
 type DifficultyProps = {
 	difficulty: string;

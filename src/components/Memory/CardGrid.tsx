@@ -2,17 +2,17 @@
 
 import Card from "./Card";
 
-import hornetImg from "../../../public/hornet_front.png";
-import zoteImg from "../../../public/zote_front.png";
-import defenderImg from "../../../public/dd_front.png";
-import clothImg from "../../../public/cloth_front.png";
-import corniferImg from "../../../public/cornifer_front.png";
-import knightImg from "../../../public/knight_front.png";
-import sheoImg from "../../../public/sheo_front.png";
-import grubDaddyImg from "../../../public/grub_father_front.png";
-import quirrelImg from "../../../public/quirrel_front.png";
-import nailsmithImg from "../../../public/nailsmith_front.png";
-import hkBack from "../../../public/hk_back.png";
+import hornetImg from "../../../public/memory-game/hornet_front.png";
+import zoteImg from "../../../public/memory-game/zote_front.png";
+import defenderImg from "../../../public/memory-game/dd_front.png";
+import clothImg from "../../../public/memory-game/cloth_front.png";
+import corniferImg from "../../../public/memory-game/cornifer_front.png";
+import knightImg from "../../../public/memory-game/knight_front.png";
+import sheoImg from "../../../public/memory-game/sheo_front.png";
+import grubDaddyImg from "../../../public/memory-game/grub_father_front.png";
+import quirrelImg from "../../../public/memory-game/quirrel_front.png";
+import nailsmithImg from "../../../public/memory-game/nailsmith_front.png";
+import hkBack from "../../../public/memory-game/hk_back.png";
 
 interface CardData {
     cardId: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import CardWindow from "@/components/Card/CardWindow";
+import CardWindow from "@/components/Memory/CardWindow";
 import Banner from "@/components/Player/Banner";
 import useScoreRecord from "@/hooks/use-score-record";
 

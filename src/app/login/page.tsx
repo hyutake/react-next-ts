@@ -25,8 +25,10 @@ const LoginPage: React.FC = () => {
 		const result = await signIn("login", {
 			username,
 			password,
-			redirect: false,		// to handle any errors (invalid credentials) on the same page
+			redirect: false,		// to handle any errors (invalid credentials) on the same page 
 		})
+
+		console.log(`${result ? result.error : 'Invalid result returned'}`);
 
 		if(result && result.error) {
 			const errors = JSON.parse(result.error);

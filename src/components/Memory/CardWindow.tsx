@@ -1,22 +1,17 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react";
-import CardGrid from "@/components/Card/CardGrid";
-import RefreshButton from "@/components/Card/RefreshButton";
-import DebugKB from "./DebugKB";
+import { useState, useEffect } from "react";
+import CardGrid from "@/components/Memory/CardGrid";
+import RefreshButton from "@/components/Memory/RefreshButton";
 import AIDifficultyToggle from "./AIDifficultyToggle";
 import useMemoryAI from "@/hooks/use-memory-ai";
+import DebugKB from "./DebugKB";
 
 interface CardData {
     cardId: string;
     uid: string;
 	isRevealed: boolean;
 	matchedBy: string;
-}
-
-interface KnowledgeUnit {
-	cardId: string;
-    uid: string;
 }
 
 const UNIQUE_CARD_ID = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -41,24 +36,13 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
 	return deck;
 };
 
-const initializeKB = (): KnowledgeUnit[] => {
-	const KB: KnowledgeUnit[] = [];
-    for(let i = 0; i < 20; i++) {
-        KB.push({
-            cardId: 'UNKNOWN',
-            uid: `c_${i}`,
-        })
-    }
-	return KB;
-}
-
 interface CardWindowProps {
 	updateUserRecord: (matchedCards: boolean, resetScore?: boolean) => void;
 	updateAIRecord: (matchedCards: boolean, resetScore?: boolean) => void;
 }
 
 const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecord }) => {
-    // to store the deck
+    // to store the deck (used to render the cards displayed)
     const [deck, setDeck] = useState<CardData[]>([]);
 	// to record the first card data
 	const [first, setFirst] = useState<{ cardId: string, uid: string }>();
@@ -142,8 +126,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 						return prevDeck.map(card => {
 							if(card.cardId === cardId) {
 								return { 
-									cardId: card.cardId, 
-									uid: card.uid,
+									...card,
 									isRevealed: false,
 									matchedBy: `${isPlayerTurn ? 'player' : 'ai'}`,
 								}
@@ -176,16 +159,17 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	};
 
     const resetHandler = () => {
-		resetScores();
+		resetScores();			// reset both the player's and the AI's score
 		setFirst(undefined);	// "clear" state var (otherwise it might check for a match on the first reveal)
-		resetKnowledgeBase();	// reset knowledge base
-		hideDeck();
-		// reshuffle cards -> change postions of cards (timeout used so that forceHide triggers and flips all the revealed cards over first)
+		resetKnowledgeBase();	// reset knowledge base (for AI)
+		hideDeck();				// hide all the cards
+		// reshuffle cards -> timeout set so that hideDeck() triggers first
         setTimeout(() => {
             setDeck(initializeDeck()); 
         }, 500);
     }
 
+	// to play the AI's turn
 	useEffect(() => {
 		if(!isPlayerTurn && !isEvaluating) {
 			AiTurnManager(difficulty);

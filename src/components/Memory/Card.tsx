@@ -1,8 +1,7 @@
 "use client";
 
 import Image, { StaticImageData } from "next/image";
-import hkBack from '../../../public/hk_back.png';
-import { useEffect, useState } from "react";
+import hkBack from '../../../public/memory-game/hk_back.png';
 
 type CardProps = {
 	imageSrc?: StaticImageData;

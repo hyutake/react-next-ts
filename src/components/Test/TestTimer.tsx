@@ -1,7 +1,7 @@
 "use client"
 
 import useTimer from "@/hooks/use-timer";
-import Timer from "../Timer";
+import Timer from '../AimLab/Timer';
 import Button from "../UI/Button";
 
 interface Props {

@@ -17,13 +17,14 @@ export const SideBarList: React.FC<SideBarListProps> = ({
 	return (
 		<ul className={`hover:cursor-pointer ${className}`}>
 			{[
-				{ name: "menu.game", label: "Memory game", link: "/game" },
+				{ name: "menu.memory", label: "Memory game", link: "/memory-game" },
+				{ name: "menu.aim", label: "Aim Trainer", link: "/aim-trainer" },
 			].map((item) => {
 				const isActive = pathname.startsWith(item.link);
 				return (
 					<Link key={item.name} href={item.link}>
 						<li
-							className={`hover:bg-primary-blue-005 ${itemClassName} ${isActive ? 'bg-blue-200' : ''}`}
+							className={`hover:bg-primary-blue-005 hover:shadow-[inset_6px_0_0_#2563CC] ${itemClassName} ${isActive ? 'bg-blue-200' : ''}`}
 						>
 							{item.label}
 						</li>

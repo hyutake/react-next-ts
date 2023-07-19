@@ -22,6 +22,11 @@ module.exports = {
         "cool-gray-20": "#BBC5D0",
         "orange-30": "#F7BA50",
         "orange-90": "#C75100",
+      },
+      cursor: {
+        'xhair1': 'url(/aim-trainer/image/xhair1.png) 10 10, crosshair',
+        'xhair2': 'url(/aim-trainer/image/xhair2.png), crosshair',
+        'xhair3': 'url(/aim-trainer/image/xhair3.png) 10 10, crosshair',
       }
     },
   },
