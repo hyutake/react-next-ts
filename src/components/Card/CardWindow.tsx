@@ -315,7 +315,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	}, [AiTurnManager, difficulty, isEvaluating, isPlayerTurn])
 
 	return (
-		<div className="flex flex-col items-center justify-center bg-cool-gray-100 py-2">
+		<div className="flex flex-col items-center justify-center py-2">
 			<RefreshButton onClick={resetHandler} />
 			<CardGrid deck={deck} onClickCard={clickCard} />
 			<AIDifficultyToggle difficulty={difficulty} setDifficulty={setDifficulty} />

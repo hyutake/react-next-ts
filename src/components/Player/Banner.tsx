@@ -6,7 +6,7 @@ type BannerProps = {
 
 const Banner: React.FC<BannerProps> = ({ label, score = 0, attempts = 0 }) => {
 	return (
-		<div className="flex flex-col text-center">
+		<div className="flex flex-col text-center w-16 md:w-24">
 			<h1 className="text-2xl">{label}</h1>
 			<div className="p-3 border border-solid rounded-lg border-white">
 				<h2 className="text-xl italic">Score</h2>
