@@ -5,6 +5,7 @@ import CardGrid from "@/components/Card/CardGrid";
 import RefreshButton from "@/components/Card/RefreshButton";
 import DebugKB from "./DebugKB";
 import AIDifficultyToggle from "./AIDifficultyToggle";
+import useMemoryAI from "@/hooks/use-memory-ai";
 
 interface CardData {
     cardId: string;
@@ -65,16 +66,16 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	const [isEvaluating, setIsEvaluating] = useState<boolean>(false);
 	// to track whose turn is it
 	const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
-	// knowledge base
-	const [knowledgeBase, setKnowledgeBase] = useState<KnowledgeUnit[]>([]);
 	// AI difficulty level
 	const [difficulty, setDifficulty] = useState<string>('easy');
+
+	const {knowledgeBase, resetKnowledgeBase, updateKnowledgeBase, AiTurnManager} = useMemoryAI();
 
     // only initialize the deck & KB on client-side
     useEffect(() => {
         setDeck(initializeDeck());
-		setKnowledgeBase(initializeKB());
-    },[]);
+		resetKnowledgeBase();
+    },[resetKnowledgeBase]);
 
 	/* Deck helper functions */
 	// updates a single CardData element in deck
@@ -118,71 +119,11 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 		updateAIRecord(false, true);
 	}
 
-	/* KB helper functions */
-	const updateKB = (cardId: string, uid: string, matched: boolean = false) => {
-		if(matched) {	// match found -> pseudo-removed from KB by setting isMatched to true
-			// console.log('Updating KB for new match found!');
-			setKnowledgeBase((prevState) => {
-				return prevState.filter(data => data.cardId !== cardId);
-			})
-		} else {	// revealed card -> update KB with the cardId for that corresponding position
-			// console.log('Updating KB for revealed card!')
-			setKnowledgeBase((prevState) => {
-				return prevState.map(data => {
-					if(data.uid === uid) {
-						return { ...data, cardId: cardId };
-					}
-					return data; 
-				})
-			})
-		}
+	/* Difficulty setter */
+	const updateDifficulty = (newDifficulty: string) => {
+		setDifficulty(newDifficulty);
+		resetHandler();
 	}
-
-	// picks a SINGLE random element in the KB (so that this can be used for both 1. and 2.)
-	// optional dataToAvoid to avoid selecting the same uid
-	const pickByRandom = useCallback((dataToAvoid: KnowledgeUnit | null = null) : KnowledgeUnit => {
-		let choice = knowledgeBase[Math.floor(Math.random() * knowledgeBase.length)];
-		if(dataToAvoid) {
-			while (choice === dataToAvoid) {
-				choice = knowledgeBase[Math.floor(Math.random() * knowledgeBase.length)];
-			}
-		}
-		return choice;
-	}, [knowledgeBase])
-
-	// finds a matching KnowledgeUnit in the KB if it exists, else returns a random one
-	const findMatch = useCallback(({cardId, uid}: KnowledgeUnit): KnowledgeUnit => {
-		const match = knowledgeBase.find(data => {
-			// find matching cardId but NOT matching uid in KB
-			return data.cardId === cardId && data.uid !== uid;
-		});
-
-		if(match) {
-			console.log("Match found in findMatch()!");
-			return match;
-		} else {
-			console.log("No matches found, giving random choice!");
-			return pickByRandom({cardId, uid});
-		}
-	}, [knowledgeBase, pickByRandom])
-
-	// for 3. -> to find any existing pairs that have yet to be matched
-	// returns either a null or a string array of the 2 uids
-	const checkForHiddenMatches = useCallback((): string[] | undefined => {
-		const knownCardIds: string[] = [];	// only tracks cardIds
-		// for each KnowledgeUnit, add the cardId to the local array if not already existing
-		// if it already exists in the local array, there IS a hidden pair -> return that hidden pair
-		for(const data of knowledgeBase) {
-			if(data.cardId === 'UNKNOWN') continue;	// ignore UNKNOWNs
-			if(knownCardIds.includes(data.cardId)) {
-				const existingPair: KnowledgeUnit[] = knowledgeBase.filter(item => item.cardId === data.cardId);
-				return [existingPair[0].uid, existingPair[1].uid];
-			} else {
-				knownCardIds.push(data.cardId);
-			}
-		}
-		return;
-	}, [knowledgeBase])
 
 	// cardId: To denote whether 2 cards match or not
 	// uid: Unique card id regardless of actual id -> to check for repeated clicks on the same card
@@ -193,7 +134,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 		}
 		if (first) {	// second card clicked
 			updateDeck({ cardId, uid, isRevealed: true, matchedBy: ''});
-			updateKB(cardId, uid);
+			updateKnowledgeBase(cardId, uid);
 			setIsEvaluating(true);
 			setTimeout(() => {
 				if (first.cardId === cardId) {	// matching
@@ -210,7 +151,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 							return card;
 						})
 					});
-					updateKB(cardId, uid, true);
+					updateKnowledgeBase(cardId, uid, true);
 					updateScore(true);
 				} else {	// not matching
 					setDeck(prevDeck => {
@@ -229,7 +170,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 			}, 1000);
 		} else {	// first card clicked
 			updateDeck({ cardId, uid, isRevealed: true, matchedBy: ''});
-			updateKB(cardId, uid);
+			updateKnowledgeBase(cardId, uid);
 			setFirst({cardId, uid});
 		}
 	};
@@ -237,76 +178,13 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
     const resetHandler = () => {
 		resetScores();
 		setFirst(undefined);	// "clear" state var (otherwise it might check for a match on the first reveal)
-		setKnowledgeBase(initializeKB());	// reset knowledge base
+		resetKnowledgeBase();	// reset knowledge base
 		hideDeck();
 		// reshuffle cards -> change postions of cards (timeout used so that forceHide triggers and flips all the revealed cards over first)
         setTimeout(() => {
             setDeck(initializeDeck()); 
         }, 500);
     }
-
-	/*
-		Potential improvement: convert all the AI logic into a custom hook useAI() somehow to reduce the amount of code here
-	 */
-	
-	// completely random choices - returns an array of 2 [uid: string]s
-	const easyAI = useCallback((): string[] => {
-		const first = pickByRandom();
-		const second = pickByRandom(first);
-		return [first.uid, second.uid]
-	}, [pickByRandom])
-
-	const mediumAI = useCallback((): string[] => {
-		const first = pickByRandom();
-		const second = findMatch(first);
-
-		return [first.uid, second.uid];
-	}, [findMatch, pickByRandom])
-
-	const hardAI = useCallback((): string[] => {
-		const matches = checkForHiddenMatches();
-		if(matches) {
-			console.log("Existing KB match found!");
-			console.log(matches);
-			return matches;
-		} else {
-			console.log("Falling back to mediumAI()!");
-			return mediumAI();
-		}
-	}, [checkForHiddenMatches, mediumAI])
-
-	// pseudo AI "decision maker"
-	const AiTurnManager = useCallback((mode: string) => {
-		if(knowledgeBase.length === 0) {	// game ended
-			console.log("No more available options!");
-			return;
-		}
-
-		let choices : string[];
-		switch(mode) {
-			case 'medium':
-				choices = mediumAI();
-				break;
-			case 'hard':
-				choices = hardAI();
-				break;
-			default:
-				choices = easyAI();
-		}
-		triggerAiClick(choices[0], 500);
-		triggerAiClick(choices[1], 1000);
-	}, [knowledgeBase.length, mediumAI, hardAI, easyAI])
-
-	const triggerAiClick = (uid: string, delay: number) => {
-		const choice = document.getElementById(uid);
-		if(choice) {
-			setTimeout(() => {
-				choice.click();
-			}, delay);
-		} else {
-			console.log("Invalid uid of " + uid + "!");
-		}
-	}
 
 	useEffect(() => {
 		if(!isPlayerTurn && !isEvaluating) {
@@ -318,7 +196,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 		<div className="flex flex-col items-center justify-center py-2">
 			<RefreshButton onClick={resetHandler} />
 			<CardGrid deck={deck} onClickCard={clickCard} />
-			<AIDifficultyToggle difficulty={difficulty} setDifficulty={setDifficulty} />
+			<AIDifficultyToggle difficulty={difficulty} updateDifficulty={updateDifficulty} />
 			{/* <DebugKB knowledgeBase={knowledgeBase} /> */}
 		</div>
 	);

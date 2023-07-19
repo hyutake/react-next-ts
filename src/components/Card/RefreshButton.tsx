@@ -10,7 +10,7 @@ const defaultClickHandler = () => {
 
 const RefreshButton: React.FC<RefreshButtonProps> = ({ onClick = defaultClickHandler }) => {
 	return (
-		<button onClick={onClick} className="border rounded-lg border-white px-6 py-2 group hover:bg-white">
+		<button onClick={onClick} className="border rounded-lg border-white px-6 py-2 group my-1 hover:bg-white">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"

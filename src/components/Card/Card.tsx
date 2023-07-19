@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ imageSrc = hkBack, id, registerClick, isRev
 	return (
         <div className="relative group" id={id} onClick={clickHandler}>
             <div className={`absolute inset-0 ${outlineBlurColor} rounded-xl ${isRevealed ? 'blur-md': isMatched ? '-inset-0.5 blur-sm' :'' } group-hover:blur-lg duration-1000 group-hover:duration-200`}></div>
-            <div className={`relative h-48 w-32 cursor-pointer group-hover:-translate-y-2 duration-500`}>
+            <div className={`relative h-32 w-24 lg:h-48 lg:w-32 cursor-pointer group-hover:-translate-y-2 duration-500`}>
                 <div className={`relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] ${isRevealed || isMatched ? '[transform:rotateY(180deg)]' : ''}`}>
                     {cardBack}
                     {cardFront}

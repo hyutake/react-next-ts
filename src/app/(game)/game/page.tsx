@@ -36,7 +36,7 @@ const GamePage: React.FC = () => {
 	const { playerRecord: aiRecord, updatePlayerRecord: updateAIRecord } = useScoreRecord();
 
 	return (
-		<div className="flex justify-evenly bg-cool-gray-100">
+		<div className="flex justify-evenly bg-cool-gray-100 w-full h-full lg:px-1">
 			<Banner label="Player" score={userRecord.score} attempts={userRecord.attempts} />
 			<CardWindow updateUserRecord={updateUserRecord} updateAIRecord={updateAIRecord}/>
 			<Banner label="AI" score={aiRecord.score} attempts={aiRecord.attempts}/>

@@ -10,14 +10,14 @@ import radiantBadge from "../../../public/radiant.png";
 
 type DifficultyProps = {
 	difficulty: string;
-    setDifficulty: Dispatch<SetStateAction<string>>
+    updateDifficulty: (newDifficulty: string) => void;
 };
 
-const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, setDifficulty }) => {
+const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, updateDifficulty }) => {
 	const toggleDifficultyHandler = (event: React.MouseEvent<HTMLDivElement>) => {
         const newDifficulty = event.currentTarget.id
 		if(difficulty === newDifficulty) return;
-        setDifficulty(newDifficulty);
+        updateDifficulty(newDifficulty);
         console.log('Difficulty set to ' + newDifficulty + '!');
 	};
 
