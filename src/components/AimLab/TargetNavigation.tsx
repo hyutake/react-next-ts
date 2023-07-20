@@ -102,7 +102,7 @@ const TargetNavigation: React.FC<TargetNavigationProps> = ({
 					</div>
 				</li>
 				<li>
-					<div className='flex flex-col items-center justify-center'>
+					<div className='flex flex-col items-center justify-center px-2'>
 						<button type="button" onClick={increaseTimeHandler} className={`flex items-center justify-center ${baseBtnClass}`}>
 							<KeyboardArrowUp />
 						</button>

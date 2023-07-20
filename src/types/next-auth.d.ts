@@ -6,6 +6,7 @@ declare module "next-auth" {
             token: string;
             id: string;
             tokenExpiry: number;
+            isExpired: boolean;
         }
     }
 }

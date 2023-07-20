@@ -1,30 +1,22 @@
-"use client"
+"use client";
 
 import { useState, useEffect, useReducer, useCallback } from "react";
-
+import { useSession, signOut } from "next-auth/react";
 import Target from "./Target";
 import TargetNavigation from "./TargetNavigation";
 import useTimer from "../../hooks/use-timer";
 import useHttp from "@/hooks/use-http";
 import { useScoreContext } from "../../store/score-context";
 
-// cursors
-import xhair1 from "../../../public/aim-trainer/image/xhair1.png";
-import xhair2 from "../../../public/aim-trainer/image/xhair2.png";
-import xhair3 from "../../../public/aim-trainer/image/xhair3.png";
-
-// hitsound
-// import osu_hit from '../../../public/aim-trainer/audio/osu-hit.wav';
-
 type TargetPosition = {
-    x: number;
-    y: number;
-}
+	x: number;
+	y: number;
+};
 
 type StatsState = {
-    score: number;
-    totalClicks: number;
-}
+	score: number;
+	totalClicks: number;
+};
 
 type StatsAction = { type: "SCORE" } | { type: "CLICK" } | { type: "RESET" };
 
@@ -42,16 +34,18 @@ const statsReducer = (state: StatsState, action: StatsAction) => {
 		};
 	}
 	return { score: 0, totalClicks: 0 };
-}
+};
 
 interface TargetWindowProps {
-    state: string;
-    updateState: (newState: string) => void;
+	state: string;
+	updateState: (newState: string) => void;
 }
 
 const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 	const { playerScore, setPlayerScore } = useScoreContext();
-	// const { user, logout } = useAuthContext();
+	const { data: session, status } = useSession();
+
+	const user = session?.user || null;
 
 	const [statsState, dispatchStats] = useReducer(statsReducer, {
 		score: 0,
@@ -68,10 +62,10 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 		l: 1280 x 720
 	*/
 
-    const getWindowHeight = (width: number, aspectRatio: number[]) => {
+	const getWindowHeight = (width: number, aspectRatio: number[]) => {
 		// aspect ratio will be an array of 2 numbers, the ratio between width & height
 		return Math.floor(width / aspectRatio[0]) * aspectRatio[1];
-	}
+	};
 
 	let windowWidth: number, windowHeight: number;
 	switch (windowSize) {
@@ -99,16 +93,18 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 	const [showStats, setShowStats] = useState<boolean>(false); // to 'modify' the content when game is inactive AFTER playing through >= 1 time(s)
 
 	// to track choice of xhair -> Object: { id: number, style: string } - default is static w/ gap
-	const [crosshair, setCrosshair] = useState<{id: string, style: string}>({
+	const [crosshair, setCrosshair] = useState<{ id: string; style: string }>({
 		id: "1",
-		style: `url(${xhair1.src}) 10 10, crosshair`,
+		style: "cursor-xhair1",
 	});
 
 	// to track color style for target - default is red
-	const [targetColor, setTargetColor] = useState<{id: string, style: string}>({
-		id: "r",
-		style: "bg-red-400",
-	});
+	const [targetColor, setTargetColor] = useState<{ id: string; style: string }>(
+		{
+			id: "r",
+			style: "bg-red-400",
+		}
+	);
 
 	const { sendRequest } = useHttp();
 
@@ -149,18 +145,17 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 	// 	flickPractice();
 	// },[statsState.score, windowWidth, windowHeight])
 
-
 	// Game type 3: Random re-positioning, but higher % chance of generating a closer position
 	useEffect(() => {
 		const lessRandom = () => {
 			const maxLeft = windowWidth - 50;
 			const maxTop = windowHeight - 50;
-	
+
 			// configuring spawns
-			const idealSpawnRange = 150; // furthest a target is allowed to spawn
+			const idealSpawnRange = 120; // furthest a target is allowed to spawn
 			let isAdd = Math.random() < 0.5; // randomize whether its a '+' or '-'
 			const maxAttemptsBeforeGivingUp = 5; // number of random gen. loops allowed before giving up and just doing random repos
-	
+
 			setTargetPos((prevPos) => {
 				let attemptCount = 1;
 				// generate x pos
@@ -173,9 +168,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 						// newX should be within [0, maxLeft]
 						attemptCount++;
 						if (attemptCount > maxAttemptsBeforeGivingUp) {
-							console.log(
-								"Giving up! Generating random pos instead!"
-							);
+							console.log("Giving up! Generating random pos instead!");
 							return {
 								x: Math.random() * maxLeft,
 								y: Math.random() * maxTop,
@@ -187,9 +180,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 						// newY should be within [0, maxTop]
 						attemptCount++;
 						if (attemptCount > maxAttemptsBeforeGivingUp) {
-							console.log(
-								"Giving up! Generating random pos instead!"
-							);
+							console.log("Giving up! Generating random pos instead!");
 							return {
 								x: Math.random() * maxLeft,
 								y: Math.random() * maxTop,
@@ -207,9 +198,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 						// newX should be within [0, maxLeft]
 						attemptCount++;
 						if (attemptCount > maxAttemptsBeforeGivingUp) {
-							console.log(
-								"Giving up! Generating random pos instead!"
-							);
+							console.log("Giving up! Generating random pos instead!");
 							return {
 								x: Math.random() * maxLeft,
 								y: Math.random() * maxTop,
@@ -221,9 +210,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 						// newY should be within [0, maxTop]
 						attemptCount++;
 						if (attemptCount > maxAttemptsBeforeGivingUp) {
-							console.log(
-								"Giving up! Generating random pos instead!"
-							);
+							console.log("Giving up! Generating random pos instead!");
 							return {
 								x: Math.random() * maxLeft,
 								y: Math.random() * maxTop,
@@ -247,15 +234,14 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 		}
 	}
 
-    // .wav files don't seem to work with base typescript / nextjs, need some modifications / customisation
+	// first sound is very soft...
 	function playHitSound() {
-        console.log('DING!');
-		// const hitSound = new Audio('../../../public/aim-trainer/audio/osu-hit.wav');
-		// hitSound.volume = 0.7;
-		// hitSound.playbackRate = 1.25;
-		// hitSound.play().catch((err) => {
-		// 	console.error(err);
-		// });
+		const hitSound = new Audio("/aim-trainer/audio/osu-hit.wav");
+		hitSound.volume = 0.7;
+		hitSound.playbackRate = 1.25;
+		hitSound.play().catch((err) => {
+			console.error(err);
+		});
 	}
 
 	function clickTargetHandler() {
@@ -279,7 +265,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 	}, []);
 
 	const gameState = state;
-	const topScore = playerScore[gameState as keyof ScoreRecord] as number;   // assert gameState to be a valid key and topScore as number
+	const topScore = playerScore[gameState as keyof ScoreRecord] as number; // assert gameState to be a valid key and topScore as number
 
 	// To trigger the stop game function once when timer ends
 	useEffect(() => {
@@ -289,9 +275,42 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 			if (statsState.score > topScore) {
 				setPlayerScore(gameState, statsState.score);
 				// update backend here
+				console.log(user?.isExpired);
+				if(!user?.isExpired) {
+					sendRequest(
+						{
+							url: "http://localhost:4000/game",
+							method: "POST",
+							data: {
+								score: statsState.score,
+								state: gameState,
+								playerId: user?.id || '',
+							},
+							token: user?.token || 'INVALID',
+						},
+						(data) => {
+							console.log(data.message);
+						}
+					);
+				} else {
+					console.log("User login expired! Signing out...");
+					signOut();
+				}
 			}
 		}
-	}, [timer, stopGameHandler, resetTimer, statsState.score, topScore, setPlayerScore, gameState, sendRequest]);
+	}, [
+		timer,
+		stopGameHandler,
+		resetTimer,
+		statsState.score,
+		topScore,
+		setPlayerScore,
+		gameState,
+		sendRequest,
+		user?.token,
+		user?.id,
+		user?.isExpired,
+	]);
 
 	// From start -> game
 	function startGameHandler() {
@@ -311,19 +330,19 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 			case "1":
 				setCrosshair({
 					id: "1",
-					style: `url(${xhair1.src}) 10 10, crosshair`,
+					style: "cursor-xhair1",
 				});
 				break;
 			case "2":
 				setCrosshair({
 					id: "2",
-					style: `url(${xhair2.src}), crosshair`,
+					style: "cursor-xhair2",
 				});
 				break;
 			case "3":
 				setCrosshair({
 					id: "3",
-					style: `url(${xhair3.src}) 10 10, crosshair`,
+					style: "cursor-xhair3",
 				});
 				break;
 			default:
@@ -384,24 +403,21 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 		/>
 	) : showStats ? (
 		<div className="w-full h-full flex flex-col justify-center items-center">
-			<h3>
-				Game state: {windowSize}_{timerSec}
+			<h3 className="text-sm">
+				( Game state: {windowSize}_{timerSec} )
 			</h3>
 			<ul>
 				<li>Score: {statsState.score}</li>
 				<li>Total clicks: {statsState.totalClicks}</li>
 				<li>
-					Accuracy:{" "}
-					{(statsState.score / statsState.totalClicks).toFixed(2)}
+					Accuracy: {(statsState.score / statsState.totalClicks).toFixed(2)}
 				</li>
-				<li>
-					Hits per sec: {(statsState.score / timerSec).toFixed(2)}
-				</li>
+				<li>Hits per sec: {(statsState.score / timerSec).toFixed(2)}</li>
 			</ul>
 			<button
 				type="button"
 				onClick={resetHandler}
-				className="border-none py-1 px-4"
+				className="border-none rounded-md py-1 px-4 hover:text-cool-gray-90 hover:bg-amber-200"
 			>
 				-- Click here to dismiss --
 			</button>
@@ -417,7 +433,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 		</div>
 	);
 
-    /*
+	/*
         cursor-xhair1, cursor-xhair2, cursor-xhair3 placed in tailwindcss config -> toggle using id or smth here
     */
 
@@ -436,9 +452,9 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 				setTargetColor={updateTargetColor}
 			/>
 			<div
-				className={`flex relative items-center justify-center cursor-xhair1 ${
-					isActive ? "bg-zinc-500" : "bg-zinc-700"
-				}`}
+				className={`flex relative items-center justify-center ${
+					crosshair.style
+				} ${isActive ? "bg-zinc-500" : "bg-zinc-700"}`}
 				style={{ height: `${windowHeight}px` }}
 				onClick={clickWindowHandler}
 			>
@@ -447,6 +463,6 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 			</div>
 		</div>
 	);
-}
+};
 
 export default TargetWindow;

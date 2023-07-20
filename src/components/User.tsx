@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 
-export const User = () => {
+const User: React.FC = () => {
 	// the Session object returned from useSession() takes awhile to "load", meaning that the status will be 'loading'
 	// hence, console.log(data) here will just yield a User object that has all its properties as 'undefined'
 	const { data, status } = useSession();
@@ -27,6 +27,13 @@ export const User = () => {
 								<span className="italic">{`${formattedDate} (value: ${sessionData[key]})`}</span>
 							</li>
 						);
+					} else if(key === 'isExpired') {
+						return (
+							<li key={key}>
+								<strong>{key}: </strong>
+								<span className="italic">{sessionData[key] ? 'true' : 'false'}</span>
+							</li>
+						);
 					}
 					return (
 						<li key={key}>
@@ -46,3 +53,5 @@ export const User = () => {
 		</div>
 	);
 };
+
+export default User;

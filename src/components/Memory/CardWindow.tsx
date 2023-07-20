@@ -6,6 +6,7 @@ import RefreshButton from "@/components/Memory/RefreshButton";
 import AIDifficultyToggle from "./AIDifficultyToggle";
 import useMemoryAI from "@/hooks/use-memory-ai";
 import DebugKB from "./DebugKB";
+import Button from "../UI/Button";
 
 interface CardData {
     cardId: string;
@@ -52,6 +53,8 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
 	// AI difficulty level
 	const [difficulty, setDifficulty] = useState<string>('easy');
+	// toggle to view knowledgeBase
+	const [showKB, setShowKB] = useState<boolean>(false);
 
 	const {knowledgeBase, resetKnowledgeBase, updateKnowledgeBase, AiTurnManager} = useMemoryAI();
 
@@ -60,6 +63,11 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
         setDeck(initializeDeck());
 		resetKnowledgeBase();
     },[resetKnowledgeBase]);
+
+	/* KB display toggle */
+	const toggleKBDisplay = () => {
+		setShowKB((prevState) => !prevState);
+	}
 
 	/* Deck helper functions */
 	// updates a single CardData element in deck
@@ -181,7 +189,8 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 			<RefreshButton onClick={resetHandler} />
 			<CardGrid deck={deck} onClickCard={clickCard} />
 			<AIDifficultyToggle difficulty={difficulty} updateDifficulty={updateDifficulty} />
-			{/* <DebugKB knowledgeBase={knowledgeBase} /> */}
+			<Button label={showKB ? 'Hide Knowledge Base' : 'Show Knowledge Base'} onClick={toggleKBDisplay} />
+			{showKB	&& <DebugKB knowledgeBase={knowledgeBase} />}
 		</div>
 	);
 }

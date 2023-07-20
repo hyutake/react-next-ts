@@ -2,12 +2,12 @@
 
 import { useSession } from "next-auth/react"
 import { redirect } from "next/navigation";
-import { User } from "@/components/user.component";
+import User from "@/components/User";
 import { ServerButton } from "@/components/buttons.component";
 import { useScoreContext } from "@/store/score-context";
 
 const ProfilePage: React.FC = () => {
-    const { status, data: session } = useSession({
+    const { status } = useSession({
         required: true,
         onUnauthenticated() {
             redirect("/api/auth/signin");
@@ -32,8 +32,6 @@ const ProfilePage: React.FC = () => {
     if(status === 'loading') {
         return <p>Loading...</p>
     }
-
-    const user = session.user;
 
     return (
         <div className="m-4 flex flex-col justify-center items-center">

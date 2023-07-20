@@ -11,7 +11,7 @@ const Timer: React.FC<TimerProps> = ({ time }) => {
 		return `${seconds}:${milliseconds}`;
 	};
 
-	return <h1 className="m-2 p-0 text-amber-200">{formatTime(time)}</h1>;
+	return <h1 className="m-2 w-10 text-amber-200">{formatTime(time)}</h1>;
 };
 
 export default Timer;

@@ -9,7 +9,7 @@ interface ScoreItemProps {
 }
 
 const ScoreItem: React.FC<ScoreItemProps> = ({ score, alias, isSelf }) => {
-	const itemClass = `rounded border-4 border-white text-black italic w-3/4 px-10 py-2 mb-2 ${
+	const itemClass = `rounded border-4 border-white text-black italic w-3/4 px-10 py-2 mb-2 text-center ${
 		isSelf ? "bg-amber-200" : "bg-white/80"
 	}`;
 	return (
