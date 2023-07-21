@@ -1,5 +1,6 @@
 "use client"
 
+import AuthForm from "@/components/AuthForm";
 import { useState } from "react";
 
 const initialDictionary: string[] = [
