@@ -1,23 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
 
 // images
 import attunedBadge from "../../../public/memory-game/attuned.png";
 import ascendedBadge from "../../../public/memory-game/ascended.png";
 import radiantBadge from "../../../public/memory-game/radiant.png";
 
+type difficulty = "easy" | "medium" | "hard";
+
 type DifficultyProps = {
 	difficulty: string;
-    updateDifficulty: (newDifficulty: string) => void;
+    updateDifficulty: (newDifficulty: difficulty) => void;
 };
 
 const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, updateDifficulty }) => {
 	const toggleDifficultyHandler = (event: React.MouseEvent<HTMLDivElement>) => {
         const newDifficulty = event.currentTarget.id
 		if(difficulty === newDifficulty) return;
-        updateDifficulty(newDifficulty);
+        updateDifficulty(newDifficulty as difficulty);
         console.log('Difficulty set to ' + newDifficulty + '!');
 	};
 

@@ -37,6 +37,8 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
 	return deck;
 };
 
+type difficulty = "easy" | "medium" | "hard";
+
 interface CardWindowProps {
 	updateUserRecord: (matchedCards: boolean, resetScore?: boolean) => void;
 	updateAIRecord: (matchedCards: boolean, resetScore?: boolean) => void;
@@ -52,10 +54,10 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	// to track whose turn is it
 	const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
 	// AI difficulty level
-	const [difficulty, setDifficulty] = useState<string>('easy');
+	const [difficulty, setDifficulty] = useState<difficulty>('easy');
 	// toggle to view knowledgeBase
 	const [showKB, setShowKB] = useState<boolean>(false);
-
+	// AI
 	const {knowledgeBase, resetKnowledgeBase, updateKnowledgeBase, AiTurnManager} = useMemoryAI();
 
     // only initialize the deck & KB on client-side
@@ -94,11 +96,11 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 
 	/* Turn management helper function */
 	const endCurrentTurn = () => {
+		console.log("Jobs done!");
 		setIsPlayerTurn((prevState) => {
 			console.log(`${prevState ? 'AI\'s turn!' : 'Player\'s turn!'}`);
 			return !prevState;
 		});
-		console.log("Jobs done!");
 	}
 
 	/* Score helper functions */
@@ -112,7 +114,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	}
 
 	/* Difficulty setter */
-	const updateDifficulty = (newDifficulty: string) => {
+	const updateDifficulty = (newDifficulty: difficulty) => {
 		setDifficulty(newDifficulty);
 		resetHandler();
 	}
@@ -185,7 +187,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	}, [AiTurnManager, difficulty, isEvaluating, isPlayerTurn])
 
 	return (
-		<div className="flex flex-col items-center justify-center py-2">
+		<div className="flex flex-col items-center justify-center py-2 gap-2">
 			<RefreshButton onClick={resetHandler} />
 			<CardGrid deck={deck} onClickCard={clickCard} />
 			<AIDifficultyToggle difficulty={difficulty} updateDifficulty={updateDifficulty} />

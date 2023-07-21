@@ -6,20 +6,6 @@ import useScoreRecord from "@/hooks/use-score-record";
 import { useScoreContext } from "@/store/score-context";
 
 const GamePage: React.FC = () => {
-	// get session info here -> if access token has expired (isExpired = true), then show a modal with some explanation text and the option to logout
-
-	// Game idea 1: memory card game (matching pairs of cards that are flipped over)
-	/* Issues: 
-		- Need animations for cards (flipping over, fanning out on the screen)
-		- Need pairs of cards (w/ art), can just use numbers or random jpgs
-		- Need AI opponent (apparently doable w/ typescript O.o)
-			- Could also just use a random % of choosing completely random options vs choosing correct options
-				- This would req. some way to track what pairs are matching even when faced down
-			- Ideally the AI opponent should only "make decisions" based on KNOWN information (i.e. revealed cards thus far)
-		- Score tracking (no. of matches made thus far)
-		- Timer probably not neeeded :/ Complexity should increase by LIMITING number of given moves OR improving AI opponent
-	*/
-
 	// Game idea 2: maze/story game (like the henry stickmin games) --> maybe integrate chatgpt to help with this
 	/*
 		Idea: 
@@ -33,11 +19,15 @@ const GamePage: React.FC = () => {
 			- Needs a decent narrative (with many branching paths) since this is gonna have to be carried by the text content (and maybe minigames)
 	*/
 
+	// Game idea 3: idk, but should make use of the keyboard
+	/*
+		Idea:
+			- NOT a typing game, should be more of a 'keybind' kinda game idk the actual term (like maplestory)
+	*/
+
 	const { playerRecord: userRecord, updatePlayerRecord: updateUserRecord } = useScoreRecord();
 	const { playerRecord: aiRecord, updatePlayerRecord: updateAIRecord } = useScoreRecord();
 
-	// only works for when running in local env. (nextauth login/logout doesn't really work on docker containers :/)
-	// probably smth to do with the ports..?
 	const {playerScore} = useScoreContext();
 
 	return (
