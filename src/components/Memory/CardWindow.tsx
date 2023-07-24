@@ -7,6 +7,7 @@ import AIDifficultyToggle from "./AIDifficultyToggle";
 import useMemoryAI from "@/hooks/use-memory-ai";
 import DebugKB from "./DebugKB";
 import Button from "../UI/Button";
+import CardStyleToggle from "./CardStyleToggle";
 
 interface CardData {
     cardId: string;
@@ -39,6 +40,8 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
 
 type difficulty = "easy" | "medium" | "hard";
 
+export type CardStyles = "default" | "main-menu" | "grimm" | "lifeblood" | "godhome";
+
 interface CardWindowProps {
 	updateUserRecord: (matchedCards: boolean, resetScore?: boolean) => void;
 	updateAIRecord: (matchedCards: boolean, resetScore?: boolean) => void;
@@ -59,6 +62,12 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	const [showKB, setShowKB] = useState<boolean>(false);
 	// AI
 	const {knowledgeBase, resetKnowledgeBase, updateKnowledgeBase, AiTurnManager} = useMemoryAI();
+	// to set various art styles for cards
+	const [cardStyle, setCardStyle] = useState<CardStyles>("default");
+
+	const updateCardStyle = (cardStyle: CardStyles) => {
+		setCardStyle(cardStyle);
+	}
 
     // only initialize the deck & KB on client-side
     useEffect(() => {
@@ -189,7 +198,8 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 	return (
 		<div className="flex flex-col items-center justify-center py-2 gap-2">
 			<RefreshButton onClick={resetHandler} />
-			<CardGrid deck={deck} onClickCard={clickCard} />
+			<CardStyleToggle cardStyle={cardStyle} updateCardStyle={updateCardStyle} />
+			<CardGrid cardStyle={cardStyle} deck={deck} onClickCard={clickCard} />
 			<AIDifficultyToggle difficulty={difficulty} updateDifficulty={updateDifficulty} />
 			<Button label={showKB ? 'Hide Knowledge Base' : 'Show Knowledge Base'} onClick={toggleKBDisplay} />
 			{showKB	&& <DebugKB knowledgeBase={knowledgeBase} />}

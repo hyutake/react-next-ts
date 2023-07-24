@@ -13,6 +13,7 @@ import grubDaddyImg from "../../../public/memory-game/grub_father_front.png";
 import quirrelImg from "../../../public/memory-game/quirrel_front.png";
 import nailsmithImg from "../../../public/memory-game/nailsmith_front.png";
 import hkBack from "../../../public/memory-game/hk_back.png";
+import { CardStyles } from "./CardWindow";
 
 interface CardData {
     cardId: string;
@@ -21,59 +22,105 @@ interface CardData {
 	matchedBy: string;
 }
 
-const setImage = (id: string) => {
+// const setFrontImg = (id: string) => {
+// 	let imgSrc;
+// 	switch (id) {
+// 		case "1":
+// 			imgSrc = hornetImg;
+// 			break;
+// 		case "2":
+// 			imgSrc = zoteImg;
+// 			break;
+// 		case "3":
+// 			imgSrc = defenderImg;
+// 			break;
+// 		case "4":
+// 			imgSrc = clothImg;
+// 			break;
+// 		case "5":
+// 			imgSrc = corniferImg;
+// 			break;
+// 		case "6":
+// 			imgSrc = knightImg;
+// 			break;
+// 		case "7":
+// 			imgSrc = sheoImg;
+// 			break;
+// 		case "8":
+// 			imgSrc = grubDaddyImg;
+// 			break;
+// 		case "9":
+// 			imgSrc = quirrelImg;
+// 			break;
+// 		case "10":
+// 			imgSrc = nailsmithImg;
+// 			break;
+// 		default: // should never happen ideally
+// 			imgSrc = hkBack;
+// 	}
+// 	return imgSrc;
+// };
+
+const setFrontImg = (id: string, cardStyle: CardStyles) => {
 	let imgSrc;
 	switch (id) {
 		case "1":
-			imgSrc = hornetImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}hornet_front.png`;
 			break;
 		case "2":
-			imgSrc = zoteImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}zote_front.png`;
 			break;
 		case "3":
-			imgSrc = defenderImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}dd_front.png`;
 			break;
 		case "4":
-			imgSrc = clothImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}cloth_front.png`;
 			break;
 		case "5":
-			imgSrc = corniferImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}cornifer_front.png`;
 			break;
 		case "6":
-			imgSrc = knightImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}knight_front.png`;
 			break;
 		case "7":
-			imgSrc = sheoImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}sheo_front.png`;
 			break;
 		case "8":
-			imgSrc = grubDaddyImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}grub_father_front.png`;
 			break;
 		case "9":
-			imgSrc = quirrelImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}quirrel_front.png`;
 			break;
 		case "10":
-			imgSrc = nailsmithImg;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}nailsmith_front.png`;
 			break;
 		default: // should never happen ideally
-			imgSrc = hkBack;
+			imgSrc = `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}hk_back_1.png`;
 	}
 	return imgSrc;
 };
 
+// fn to get the card back - optional id value for potential alt card back art (in the future maybe)
+const setBackImg = (cardStyle: CardStyles, id: number = 1) => {
+	return `/memory-game/${cardStyle === 'default' ? '' : cardStyle + '/'}hk_back_${id}.png`;
+}
+
 type CardGridProps = {
+	cardStyle: CardStyles;
 	deck: CardData[];
 	onClickCard: (cardId: string, uid: string) => void;
 };
 
-const CardGrid: React.FC<CardGridProps> = ({ deck, onClickCard }) => {
+const CardGrid: React.FC<CardGridProps> = ({ cardStyle, deck, onClickCard }) => {
 	return (
-		<div className="grid grid-cols-5 py-2 px-4 gap-5">
+		<div className="grid grid-cols-5 py-2 px-4 gap-5"> 
 			{deck.map((card) => {
 				return (
 					<Card
 						key={card.uid}
 						id={card.uid}
-						imageSrc={setImage(card.cardId)}
+						backImgSrc={setBackImg(cardStyle)}
+						frontImgSrc={setFrontImg(card.cardId, cardStyle)}
 						registerClick={onClickCard.bind(null, card.cardId, card.uid)}
                         isRevealed={card.isRevealed}
 						matchedBy={card.matchedBy}

@@ -1,17 +1,17 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
-import hkBack from '../../../public/memory-game/hk_back.png';
+import Image from "next/image";
 
 type CardProps = {
-	imageSrc?: StaticImageData;
+	backImgSrc: string;
+	frontImgSrc: string;
     id: string;
     registerClick: () => void;
     isRevealed: boolean;
     matchedBy: string;
 };
 
-const Card: React.FC<CardProps> = ({ imageSrc = hkBack, id, registerClick, isRevealed, matchedBy }) => {
+const Card: React.FC<CardProps> = ({ backImgSrc, frontImgSrc, id, registerClick, isRevealed, matchedBy }) => {
     const isMatched = matchedBy !== '';
 
 	const clickHandler = () => {
@@ -24,13 +24,13 @@ const Card: React.FC<CardProps> = ({ imageSrc = hkBack, id, registerClick, isRev
 
 	const cardBack = (
 		<div className="absolute inset-0 h-full w-full rounded-xl text-center text-black flex flex-col items-center justify-center">
-			<Image src={hkBack} alt="" priority={true} draggable={false} />
+			<Image src={backImgSrc} alt="" priority={true} draggable={false} width={128} height={192} />
 		</div>
 	);
 
 	const cardFront = (
 		<div className="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center">
-            <Image src={imageSrc} alt="" draggable={false} />
+            <Image src={frontImgSrc} alt="" draggable={false} width={128} height={192} />
         </div>
 	);
 
