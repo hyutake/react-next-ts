@@ -1,6 +1,5 @@
 import { Formik } from "formik";
 import Link from "next/link";
-import { useState } from "react";
 
 interface FormValues {
 	username: string;
@@ -13,19 +12,20 @@ interface FormErrors {
 }
 
 interface FormProps {
+	authErrors?: object;
 	mode: string;
 	onSubmit: (values: FormValues) => Promise<void>;
 }
 
-const AuthForm: React.FC<FormProps> = ({ mode, onSubmit }) => {
-    const [signupResponse, setSignupResponse] = useState<object>();
+const AuthForm: React.FC<FormProps> = ({ authErrors, mode, onSubmit }) => {
+	console.log(authErrors);
 
 	return (
 		<div>
 			<Formik
 				initialValues={{ username: "", password: "" }}
 				validate={(values: FormValues) => {
-                    // validate form input values
+					// validate form input values
 					const errors: FormErrors = {};
 					if (!values.username) {
 						errors.username = "Username cannot be empty!";
@@ -57,7 +57,16 @@ const AuthForm: React.FC<FormProps> = ({ mode, onSubmit }) => {
 						className="w-full max-w-2xl my-8 mx-auto"
 					>
 						<div className="text-center">
-							<h1 className="text-4xl font-bold mb-4">{mode === 'login' ? 'Login' : 'Sign up'}</h1>
+							<h1 className="text-4xl font-bold mb-4">
+								{mode === "login" ? "Login" : "Sign up"}
+							</h1>
+							{authErrors && (
+								<ul>
+									{Object.values(authErrors).map((err) => {
+										return <li key={err}>{err}</li>;
+									})}
+								</ul>
+							)}
 						</div>
 						<p className="mb-2">
 							<label className="w-full block font-semibold" htmlFor="username">
@@ -74,7 +83,9 @@ const AuthForm: React.FC<FormProps> = ({ mode, onSubmit }) => {
 								required
 							/>
 						</p>
-                        {touched.username && errors.username && <p className="text-red-400">*{errors.username}</p>}
+						{touched.username && errors.username && (
+							<p className="text-red-400">*{errors.username}</p>
+						)}
 						<p className="mb-2">
 							<label className="w-full block font-semibold" htmlFor="password">
 								Password
@@ -90,7 +101,9 @@ const AuthForm: React.FC<FormProps> = ({ mode, onSubmit }) => {
 								required
 							/>
 						</p>
-                        {touched.password && errors.password && <p className="text-red-400">*{errors.password}</p>}
+						{touched.password && errors.password && (
+							<p className="text-red-400">*{errors.password}</p>
+						)}
 						{mode === "login" && (
 							<div className="flex justify-between">
 								<p>
@@ -119,14 +132,19 @@ const AuthForm: React.FC<FormProps> = ({ mode, onSubmit }) => {
 								</div>
 							</div>
 						)}
-						{mode === 'signup' && <div className="flex items-center justify-end gap-4">
-							<Link className="hover:text-red-400" href={"/auth/?mode=login"}>
-								Return to Login
-							</Link>
-							<button type="submit" className="py-2 px-6 rounded bg-zinc-200 text-cool-gray-100 hover:bg-primary-blue-005">
-								Register
-							</button>
-						</div>}
+						{mode === "signup" && (
+							<div className="flex items-center justify-end gap-4">
+								<Link className="hover:text-red-400" href={"/auth/?mode=login"}>
+									Return to Login
+								</Link>
+								<button
+									type="submit"
+									className="py-2 px-6 rounded bg-zinc-200 text-cool-gray-100 hover:bg-primary-blue-005"
+								>
+									Register
+								</button>
+							</div>
+						)}
 					</form>
 				)}
 			</Formik>

@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const {username, password} = credentials as { username: string; password: string }
-        const response = await fetch("http://localhost:4000/auth/login", {
+        const response = await fetch(`http://${process.env.BACKEND_SERVER}:4000/auth/login`, {
             method: 'POST',
             body: JSON.stringify({
                 username,
