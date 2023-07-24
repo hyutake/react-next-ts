@@ -279,7 +279,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 					if(!user.isExpired) {
 						sendRequest(
 							{
-								url: "http://localhost:4000/game",
+								url: `http://localhost:4000/game`,
 								method: "POST",
 								data: {
 									score: statsState.score,

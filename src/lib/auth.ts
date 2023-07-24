@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: '/login',
+    signIn: '/auth/?mode=login',
   },
   events: {
     // triggers after successful sign in - just for debug logs I think

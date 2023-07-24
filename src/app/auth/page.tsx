@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
 
 const AuthPage: React.FC = () => {
@@ -25,7 +25,6 @@ const AuthPage: React.FC = () => {
 		password: string;
 	}) => {
 		if (mode === "login") {
-            console.log("mode: login");
 			// result will resolve to an object with { error: , status: , ok: , url:  } for CredentialsProvider
 			// if an error or null was thrown in authorize(), it (or CredentialsSignIn for null) will be "placed" as a string in 'error'
 			const result = await signIn("login", {
@@ -34,12 +33,13 @@ const AuthPage: React.FC = () => {
 			});
 
 			// signIn() does return some response (should alw be the case I think?)
-			if(result) {
+			if(result?.error) {
 				console.log(result.error);
 				setErrors(JSON.parse(result.error as string));
+			} else {
+				router.push('/');
 			}
 		} else {    // signup
-            console.log("mode: signup");
             const alias = scrambleString(values.username); // get a randomized alias based on username
 
             const response = await fetch(`http://${process.env.BACKEND_SERVER}:4000/auth/signup`, {
@@ -55,6 +55,9 @@ const AuthPage: React.FC = () => {
 			console.log(resData);
             if(resData.errors) {
 				setErrors(resData.errors);
+			} else {
+				console.log(resData.message);
+				router.push('/auth/?mode=login');
 			}
 		}
 	};
