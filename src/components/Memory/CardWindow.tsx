@@ -38,9 +38,9 @@ const initializeDeck = (cards: string[] = [...UNIQUE_CARD_ID, ...UNIQUE_CARD_ID]
 	return deck;
 };
 
-type difficulty = "easy" | "medium" | "hard";
+export type difficulty = "easy" | "medium" | "hard";
 
-export type CardStyles = "default" | "main-menu" | "grimm" | "lifeblood" | "godhome";
+export type CardStyles = "default" | "kingsoul" | "grimm" | "lifeblood" | "godhome";
 
 interface CardWindowProps {
 	updateUserRecord: (matchedCards: boolean, resetScore?: boolean) => void;
@@ -69,7 +69,7 @@ const CardWindow: React.FC<CardWindowProps> = ({ updateUserRecord, updateAIRecor
 		setCardStyle(cardStyle);
 	}
 
-    // only initialize the deck & KB on client-side
+    // only initialize the deck & KB on client-side 
     useEffect(() => {
         setDeck(initializeDeck());
 		resetKnowledgeBase();

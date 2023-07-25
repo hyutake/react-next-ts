@@ -1,4 +1,5 @@
 import { CardStyles } from "./CardWindow";
+import Image from "next/image";
 
 interface CardStyleToggleProps {
     cardStyle: CardStyles;
@@ -24,18 +25,16 @@ const CardStyleToggle: React.FC<CardStyleToggleProps> = ({ cardStyle, updateCard
 				onClick={toggleCardStyleHandler}
                 id="default"
 			>
-				{/* <Image src={attunedBadge} alt="default" /> */}
-                <p>-- insert img here --</p>
+				<Image src='/memory-game/badges/card-styles/void_badge.png' alt="default" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
-					cardStyle === "main-menu" ? "" : "brightness-50"
+					cardStyle === "kingsoul" ? "" : "brightness-50"
 				}`}
 				onClick={toggleCardStyleHandler}
-                id="main-menu"
+                id="kingsoul"
 			>
-				{/* <Image src={ascendedBadge} alt="main-menu" /> */}
-                <p>-- insert img here --</p>
+				<Image src='/memory-game/badges/card-styles/king_badge.png' alt="kingsoul" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
@@ -44,8 +43,7 @@ const CardStyleToggle: React.FC<CardStyleToggleProps> = ({ cardStyle, updateCard
 				onClick={toggleCardStyleHandler}
                 id="grimm"
 			>
-				{/* <Image src={radiantBadge} alt="grimm" /> */}
-                <p>-- insert img here --</p>
+				<Image src='/memory-game/badges/card-styles/grimm_badge.png' alt="grimm" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
@@ -54,8 +52,7 @@ const CardStyleToggle: React.FC<CardStyleToggleProps> = ({ cardStyle, updateCard
 				onClick={toggleCardStyleHandler}
                 id="lifeblood"
 			>
-				{/* <Image src={radiantBadge} alt="lifeblood" /> */}
-                <p>-- insert img here --</p>
+				<Image src='/memory-game/badges/card-styles/life_badge.png' alt="lifeblood" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
@@ -64,8 +61,7 @@ const CardStyleToggle: React.FC<CardStyleToggleProps> = ({ cardStyle, updateCard
 				onClick={toggleCardStyleHandler}
                 id="godhome"
 			>
-				{/* <Image src={radiantBadge} alt="godhome" /> */}
-                <p>-- insert img here --</p>
+				<Image src='/memory-game/badges/card-styles/dream_badge.png' alt="godhome" width={50} height={50} />
 			</div>
 		</div>
     )

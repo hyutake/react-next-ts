@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
-
-// images
-import attunedBadge from "../../../public/memory-game/attuned.png";
-import ascendedBadge from "../../../public/memory-game/ascended.png";
-import radiantBadge from "../../../public/memory-game/radiant.png";
-
-type difficulty = "easy" | "medium" | "hard";
-
+import { difficulty } from "./CardWindow";
+ 
 type DifficultyProps = {
 	difficulty: string;
     updateDifficulty: (newDifficulty: difficulty) => void;
@@ -31,7 +25,7 @@ const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, updateDiffi
 				onClick={toggleDifficultyHandler}
                 id="easy"
 			>
-				<Image src={attunedBadge} alt="easy" />
+				<Image src='/memory-game/badges/difficulty/attuned.png' alt="easy" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
@@ -40,7 +34,7 @@ const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, updateDiffi
 				onClick={toggleDifficultyHandler}
                 id="medium"
 			>
-				<Image src={ascendedBadge} alt="medium" />
+				<Image src='/memory-game/badges/difficulty/ascended.png' alt="medium" width={50} height={50} />
 			</div>
 			<div
 				className={`cursor-pointer ${
@@ -49,7 +43,7 @@ const AIDifficultyToggle: React.FC<DifficultyProps> = ({ difficulty, updateDiffi
 				onClick={toggleDifficultyHandler}
                 id="hard"
 			>
-				<Image src={radiantBadge} alt="hard" />
+				<Image src='/memory-game/badges/difficulty/radiant.png' alt="hard" width={50} height={50} />
 			</div>
 		</div>
 	);
