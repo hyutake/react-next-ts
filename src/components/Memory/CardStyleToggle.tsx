@@ -14,8 +14,6 @@ const CardStyleToggle: React.FC<CardStyleToggleProps> = ({ cardStyle, updateCard
         console.log(`Card style set to ${newCardStyle}!`);
     }
 
-    // find images to represent 'badges' for each style
-
     return (
         <div className="flex flex-row justify-center items-center gap-3">
 			<div
