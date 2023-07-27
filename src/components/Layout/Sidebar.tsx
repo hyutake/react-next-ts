@@ -19,6 +19,7 @@ export const SideBarList: React.FC<SideBarListProps> = ({
 			{[
 				{ name: "menu.memory", label: "Memory game", link: "/memory-game" },
 				{ name: "menu.aim", label: "Aim Trainer", link: "/aim-trainer" },
+				{ name: "menu.keyboard", label: "(WIP)", link: "/keyboard" },
 			].map((item) => {
 				const isActive = pathname.startsWith(item.link);
 				return (

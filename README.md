@@ -1,5 +1,13 @@
 ## Did this to practice nextJS & TypeScript
 
+## Ideas:
+### Keyboard-based game...?
+<ul>
+    <li>Theme: demon slayer</li>
+    <li>w, a, s, d for movement? Top-down grid view would be easiest to display "movement" (otherwise animation is probably req.)</li>
+    <li>Maybe something like a pokemon clone? Minus the pokemon - replace w/ the player. Easier to animate w/ fixed motions for attacks etc.</li>
+</ul>
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
