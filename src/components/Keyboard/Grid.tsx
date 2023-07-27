@@ -1,62 +1,46 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react";
+import { Position } from "@/app/(game)/keyboard/page";
 
-type Position = {
-    x: number;
-    y: number;
+interface GridProps {
+	curPosition: Position;
+	grid: number[];
 }
 
-const Grid: React.FC = () => {
-    const gridSize = 12;
-    // position is 0-indexed. (0, 0) refers to top-left of grid -> (19, 19 refers to bottom-right of grid)
-    const [curPosition, setCurPosition] = useState<Position>({x: 0, y: 0});
+const gridSize = 10;    // only 1 - 12 allowed
 
-    // listen for certain key presses
-    useEffect(() => {
-        const handleKeyPress = (event: KeyboardEvent) => {
-            switch(event.key) {
-                case 'w':   // forward
-                    setCurPosition(prevPos => ({ x: prevPos.x, y: Math.max(0, prevPos.y - 1) }));
-                    break;
-                case 'a':   // left
-                    setCurPosition(prevPos => ({ x: Math.max(0, prevPos.x - 1), y: prevPos.y }));
-                    break;
-                case 's':   // back
-                    setCurPosition(prevPos => ({ x: prevPos.x, y: Math.min(gridSize - 1, prevPos.y + 1 )}));
-                    break;
-                case 'd':   // right
-                    setCurPosition(prevPos => ({ x: Math.min(gridSize - 1, prevPos.x + 1), y: prevPos.y }));
-                    break;
-                default:
-                    break;
-            }
-        }
+/*
+    Idea: Grid will purely be used to render a grid of 12 x 12 squares (best I can do :/)
+        - It will receive curPosition so that the current position can be "marked" (i.e. rendered differently)
+        - The idea is to have several different 12 x 12 grids to represent different maps
+        - So, the player can switch between maps while still preserving their position
+        - To make this game challenging the grids will probably have to be hard-coded
+        - Either a full grid configuration or a special grid name will also be passed here, TBD
+        - In order to correctly handle movement logic - e.g. when attempting to move to a "forbidden zone", stop
+            - Movement logic should be coded in somewhere where you can infer what blocks are of what type...
+*/
+const Grid: React.FC<GridProps> = ({ curPosition, grid }) => {
+	const renderGrid = () => {
+		const gridItems = [];
+		for (let y = 0; y < gridSize; y++) {
+			for (let x = 0; x < gridSize; x++) {
+				gridItems.push(
+					<div
+						key={`${x}-${y}`}
+						className={`h-8 w-8 text-cool-gray-90 ${
+							curPosition.x === x && curPosition.y === y
+								? "bg-amber-300"
+								: grid[y*10+x] === 1 ? 'bg-gray-300' : 'bg-white'}`}
+					>
+						({x},{y})
+					</div>
+				);
+			}
+		}
+		return gridItems;
+	};
 
-        window.addEventListener('keydown', handleKeyPress);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        }
-    }, [])
-
-    const renderGrid = () => {
-        const gridItems = [];
-        for(let y = 0; y < gridSize; y++) {
-            for(let x = 0; x < gridSize; x++) {
-                gridItems.push(<div key={`${x}-${y}`} className={`h-8 w-8 text-black ${curPosition.x === x && curPosition.y === y ? 'bg-amber-300' : 'bg-white'}`}>
-                    ({x},{y})
-                </div>)
-            }
-        }
-        return gridItems;
-    }
-
-    return (
-        <div className={`grid grid-cols-12 gap-1`}>
-            {renderGrid()}
-        </div>
-    );
-}
+	return <div className={`grid grid-cols-10 gap-1`}>{renderGrid()}</div>;
+};
 
 export default Grid;

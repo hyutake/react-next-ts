@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
       </div>
       <div className="container mx-auto mt-6">
         <p className="md:text-end text-start font-normal text-sm text-white ml-auto mr-[90px]">
-          &copy; {new Date().getFullYear()} さくま なつ
+          &copy; {new Date().getFullYear()} サクマ ナツ
         </p>
       </div>
     </footer>
