@@ -1,24 +1,35 @@
 "use client";
 
-import { Position } from "@/app/(game)/keyboard/page";
+import { Position } from "@/app/(game)/maze/page";
 
 interface GridProps {
 	curPosition: Position;
-	grid: number[];
+	grid: number[][];
 }
 
 const gridSize = 10;    // only 1 - 12 allowed
 
 /*
-    Idea: Grid will purely be used to render a grid of 12 x 12 squares (best I can do :/)
+    Idea: Grid will purely be used to render a grid of 10 x 10 squares
         - It will receive curPosition so that the current position can be "marked" (i.e. rendered differently)
-        - The idea is to have several different 12 x 12 grids to represent different maps
+        - The idea is to have several different 10 x 10 grids to represent different maps
         - So, the player can switch between maps while still preserving their position
-        - To make this game challenging the grids will probably have to be hard-coded
-        - Either a full grid configuration or a special grid name will also be passed here, TBD
-        - In order to correctly handle movement logic - e.g. when attempting to move to a "forbidden zone", stop
-            - Movement logic should be coded in somewhere where you can infer what blocks are of what type...
+        	- To make this game challenging the grids will probably have to be hard-coded
+        - Full grid config (number[]) will be passed here as well
+        - Movement logic will be handled in page.tsx
 */
+
+const mapGridIdToBg = (gridId: number): string => {
+	switch(gridId) {
+		case 1:		// impassible area
+			return 'bg-gray-300';
+		case 2:		// death area? TBD
+			return 'bg-red-300';
+		default:
+			return 'bg-white';
+	}
+}
+
 const Grid: React.FC<GridProps> = ({ curPosition, grid }) => {
 	const renderGrid = () => {
 		const gridItems = [];
@@ -27,10 +38,10 @@ const Grid: React.FC<GridProps> = ({ curPosition, grid }) => {
 				gridItems.push(
 					<div
 						key={`${x}-${y}`}
-						className={`h-8 w-8 text-cool-gray-90 ${
+						className={`h-10 w-10 text-cool-gray-90 ${
 							curPosition.x === x && curPosition.y === y
 								? "bg-amber-300"
-								: grid[y*10+x] === 1 ? 'bg-gray-300' : 'bg-white'}`}
+								: mapGridIdToBg(grid[y][x])}`}
 					>
 						({x},{y})
 					</div>
