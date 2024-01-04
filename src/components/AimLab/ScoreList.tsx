@@ -27,9 +27,9 @@ const ScoreList = ({state}: {state: string}) => {
 
 	// filter only the scores for the current game mode + replace 'old' player record with current player record
 	const mappedRecordsByState = scoreRecords.map((record) => {
-		let score = record[state as keyof ScoreRecord] as number;
+		let score = record.scores[state as keyof Scores] as number;
 		if(record.id === playerScore.id) {
-			score = playerScore[state as keyof ScoreRecord] as number;
+			score = playerScore.scores[state as keyof Scores] as number;
 		}
 		return {
 			alias: record.alias,
@@ -42,7 +42,7 @@ const ScoreList = ({state}: {state: string}) => {
 		mappedRecordsByState.push({
 			alias: playerScore.alias,
 			id: playerScore.id,
-			score: playerScore[state as keyof ScoreRecord] as number,
+			score: playerScore.scores[state as keyof Scores] as number,
 		})
 	}
 

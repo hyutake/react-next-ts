@@ -42,7 +42,7 @@ const AuthPage: React.FC = () => {
 		} else {    // signup
             const alias = scrambleString(values.username); // get a randomized alias based on username
 
-            const response = await fetch(`http://${process.env.BACKEND_SERVER}:4000/auth/signup`, {
+            const response = await fetch(`${process.env.BACKEND_USER_URL}/auth/signup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

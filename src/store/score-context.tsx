@@ -15,18 +15,20 @@ type ScoreContextObj = {
 const initialPlayerScore: ScoreRecord = {
 	alias: 'UNKNOWN',
 	id: '-1',
-	s_15: 0,
-	s_30: 0,
-	s_45: 0,
-	s_60: 0,
-	m_15: 0,
-	m_30: 0,
-	m_45: 0,
-	m_60: 0,
-	l_15: 0,
-	l_30: 0,
-	l_45: 0,
-	l_60: 0,
+    scores: {
+        s_15: 0,
+        s_30: 0,
+        s_45: 0,
+        s_60: 0,
+        m_15: 0,
+        m_30: 0,
+        m_45: 0,
+        m_60: 0,
+        l_15: 0,
+        l_30: 0,
+        l_45: 0,
+        l_60: 0,
+    }
 };
 
 export const ScoreContext = React.createContext<ScoreContextObj>({
@@ -59,7 +61,11 @@ const ScoreProvider: React.FC<ScoreProviderProps> = ({ children }) => {
         console.log('Updating playerScore!');
         // fn expects to receive gameState and score
         setPlayerScore(prevScore => {
-            return {...prevScore, [gameState]: score}
+            return {
+                alias: prevScore.alias, 
+                id: prevScore.id, 
+                scores: {...prevScore.scores, [gameState]: score}
+            }
         });
     }, [])
 
@@ -72,7 +78,7 @@ const ScoreProvider: React.FC<ScoreProviderProps> = ({ children }) => {
     // Goal: fetch score records when user switches between logged in & logged out (or expired)
     useEffect(() => {
         const fetchRecords = async () => {
-            const response = await fetch(`http://localhost:4000/game`, {
+            const response = await fetch(`http://localhost:4001/game`, {
                 headers: {'Authorization' : `Bearer ${user?.token || 'INVALID'}`}
             });
     

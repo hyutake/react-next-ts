@@ -13,7 +13,7 @@ const DungeonSelector: React.FC<DungeonSelectorProps> = ({ selected, handleClick
         return Object.keys(Dungeon).map((key) => {
             const active = selected ? Dungeon[key] === selected : false;
     
-            return <Grid item xs={2} key={key} onClick={handleClick.bind(null, Dungeon[key])}>
+            return <Grid item xs={2} key={key} onClick={handleClick.bind(null, Dungeon[key])} sx={{cursor: 'pointer'}}>
                 <Grid sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                     <Image src={active ? '/darkest/torch_100.png' : '/darkest/torch_0.png'} alt={active ? 'Active' : 'Inactive'} width={40} height={55} />
                     <span style={{color: `${active ? COLORS.ORANGE_30 : 'white'}`, fontSize: '20px', lineHeight: '14px', fontWeight: '600'}}>{Dungeon[key as keyof Dungeon]}</span>

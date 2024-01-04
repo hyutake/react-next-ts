@@ -1,6 +1,4 @@
-type ScoreRecord = {
-	alias: string;
-	id: string;
+interface Scores {
 	s_15: number;
 	s_30: number;
 	s_45: number;
@@ -13,4 +11,10 @@ type ScoreRecord = {
 	l_30: number;
 	l_45: number;
 	l_60: number;
+}
+
+type ScoreRecord = {
+	alias: string;
+	id: string;
+	scores: Scores;
 };

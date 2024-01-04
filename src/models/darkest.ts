@@ -1,11 +1,11 @@
 export enum Dungeon {
-    RUINS = 'Ruins',
-    WARRENS = 'Warrens',
-    WEALD = 'Weald',
-    COVE = 'Cove',
-    COURTYARD = 'Courtyard',
-    FARMSTEAD = 'Farmstead',
-    DARKEST_DUNGEON = 'The Darkest Dungeon'
+    RUINS = 0,
+    WARRENS = 1,
+    WEALD = 2,
+    COVE = 3,
+    COURTYARD = 4,
+    FARMSTEAD = 5,
+    DARKEST_DUNGEON = 6
 }
 
 export enum DungeonDifficulty {
@@ -21,24 +21,24 @@ export enum DungeonLength {
 }
 
 export enum HeroClasses {
-    ABOMINATION = 1,
-    ANTIQUARIAN = 2,
-    ARBALEST = 3,
-    BOUNTY_HUNTER = 4,
-    CRUSADER = 5,
-    GRAVE_ROBBER = 6,
-    HELLION = 7,
-    HIGHWAYMAN = 8,
-    HOUNDMASTER = 9,
-    JESTER = 10,
-    LEPER = 11,
-    MAN_AT_ARMS = 12,
-    MUSKETEER = 13,
-    OCCULTIST = 14,
-    PLAGUE_DOCTOR = 15,
-    VESTAL = 16,
-    FLAGELLANT = 17,
-    SHIELDBREAKER = 18,
+    ABOMINATION = 0,
+    ANTIQUARIAN = 1,
+    ARBALEST = 2,
+    BOUNTY_HUNTER = 3,
+    CRUSADER = 4,
+    GRAVE_ROBBER = 5,
+    HELLION = 6,
+    HIGHWAYMAN = 7,
+    HOUNDMASTER = 8,
+    JESTER = 9,
+    LEPER = 10,
+    MAN_AT_ARMS = 11,
+    MUSKETEER = 12,
+    OCCULTIST = 13,
+    PLAGUE_DOCTOR = 14,
+    VESTAL = 15,
+    FLAGELLANT = 16,
+    SHIELDBREAKER = 17,
 }
 
 export enum GameDifficulty {

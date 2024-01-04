@@ -14,7 +14,7 @@ const DarkestPage = () => {
 
     return (
         <Grid sx={{display: 'flex', flexDirection: 'column', padding: '8px', justifyContent: 'center', alignItems: 'center'}}>
-            <h1 className="font-bold text-xl">DARKEST COMPANION</h1>
+            <h1 className="font-bold text-xl">DARKEST COMPANION {selectedDungeon ? `(${selectedDungeon})` : null}</h1>
             <DungeonSelector selected={selectedDungeon} handleClick={handleClick} />
         </Grid>
     )

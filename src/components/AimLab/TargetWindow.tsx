@@ -265,7 +265,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 	}, []);
 
 	const gameState = state;
-	const topScore = playerScore[gameState as keyof ScoreRecord] as number; // assert gameState to be a valid key and topScore as number
+	const topScore = playerScore.scores[gameState as keyof Scores] as number; // assert gameState to be a valid key and topScore as number
 
 	// To trigger the stop game function once when timer ends
 	useEffect(() => {
@@ -279,7 +279,7 @@ const TargetWindow: React.FC<TargetWindowProps> = ({ state, updateState }) => {
 					if(!user.isExpired) {
 						sendRequest(
 							{
-								url: `http://localhost:4000/game`,
+								url: `${process.env.BACKEND_GAME_URL}/game`,
 								method: "POST",
 								data: {
 									score: statsState.score,

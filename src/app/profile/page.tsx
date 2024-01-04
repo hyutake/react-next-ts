@@ -17,13 +17,16 @@ const ProfilePage: React.FC = () => {
     const {playerScore} = useScoreContext();
 
     const renderPlayerScore = (playerScore: ScoreRecord) => {
-        const scores:any[] = Object.keys(playerScore).map((key: any) => {
+        console.log("playerScore: ", playerScore);
+        const scores:any[] = Object.keys(playerScore.scores).map((key: any) => {
             return (<li key={key}>
-                {key}: {playerScore[key as keyof ScoreRecord]}
+                {key}: {playerScore.scores[key as keyof Scores]}
             </li>)
         })
         return (
             <ul className="flex flex-col justify-center items-center">
+                <li key={'alias'}>Alias: {playerScore.alias}</li>
+                <li key={'id'}>Id: {playerScore.id}</li>
                 {scores}
             </ul>
         );
