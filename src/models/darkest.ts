@@ -1,11 +1,11 @@
 export enum Dungeon {
-    RUINS = 0,
-    WARRENS = 1,
-    WEALD = 2,
-    COVE = 3,
-    COURTYARD = 4,
-    FARMSTEAD = 5,
-    DARKEST_DUNGEON = 6
+    RUINS = 'Ruins',
+    WARRENS = 'Warrens',
+    WEALD = 'Weald',
+    COVE = 'Cove',
+    COURTYARD = 'Courtyard',
+    FARMSTEAD = 'Farmstead',
+    DARKEST_DUNGEON = 'Darkest Dungeon'
 }
 
 export enum DungeonDifficulty {
@@ -15,9 +15,9 @@ export enum DungeonDifficulty {
 }
 
 export enum DungeonLength {
-    SHORT = 'Short',
-    MEDIUM = 'Medium',
-    LONG = 'Long',
+    SHORT = 'short',
+    MEDIUM = 'medium',
+    LONG = 'long',
 }
 
 export enum HeroClasses {
