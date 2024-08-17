@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-cool-gray-90 py-8 px-6">
+        <footer className="bg-cool-gray-90 py-6 px-6">
       <div className="container mx-auto flex md:flex-row flex-col gap-4 lg:ml-[90px]">
         {[
           {label: 'About', link: '/about'}

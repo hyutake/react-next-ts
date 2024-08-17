@@ -74,7 +74,7 @@ const DarkestExpeditionPage = () => {
         <Grid sx={{display: 'flex', flexDirection: 'column', padding: '8px'}}>
             <h1 className="font-bold text-xl" style={{marginBottom: "8px"}}>{debugText}</h1>
             {/* Selectors */}
-            <Grid sx={{display: 'flex', flexDirection: 'column', rowGap: '8px', justifyContent: 'center', alignItems: 'center', pt: '12px', pb: '24px'}}>
+            <Grid sx={{display: 'flex', flexDirection: 'column', rowGap: '16px', justifyContent: 'center', alignItems: 'center', pt: '12px', pb: '24px'}}>
                 <DungeonSelector selected={selectedDungeon} handleClick={handleDungeonClick} />
                 <DurationSelector selected={selectedDuration} handleClick={handleDurationClick} />
             </Grid>

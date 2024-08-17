@@ -2,7 +2,7 @@ import { Provisions } from "@/models/expedition";
 import { Grid } from "@mui/material";
 import ItemDisplay from "./ItemDisplay";
 import { useEffect, useState } from "react";
-import { PROVISION_MAX_STACK } from "@/utils/constants";
+import { PROVISION_COSTS, PROVISION_MAX_STACK } from "@/utils/Constants/shop";
 
 interface BagItem {
     name: keyof Provisions;
@@ -12,12 +12,12 @@ interface BagItem {
 interface BagProps {
     items: Provisions | undefined;
     onItemClick: (item: keyof Provisions) => void;
-    enableMaxStacks?: boolean;
+    isShop?: boolean;
 }
 
 // there are 16 inventory slots in a bag (that you bring in an expedition)
 // need to display them as a 2 x 8 "grid"
-const Bag: React.FC<BagProps> = ({items, onItemClick, enableMaxStacks=true}) => {
+const Bag: React.FC<BagProps> = ({items, onItemClick, isShop=false}) => {
     const [updatedBag, setUpdatedBag] = useState<BagItem[]>([]);
 
     const addItem = (item: keyof Provisions, value: number) => {
@@ -44,7 +44,7 @@ const Bag: React.FC<BagProps> = ({items, onItemClick, enableMaxStacks=true}) => 
         if(items != undefined) {
             // check for stacks (i.e. value exceeding max stack count, meaning that the item will take up another slot)
             Object.entries(items).forEach(([key, value]) => {
-                const maxStack = enableMaxStacks ? PROVISION_MAX_STACK[key as keyof Provisions] : 99;
+                const maxStack = isShop ? 99 : PROVISION_MAX_STACK[key as keyof Provisions];
                 if(value > maxStack) {  // if amount exceeds maximum amount per item slot,
                     // add the necessary no. of extra slots to the updated bag
                     let tempVal = value;
@@ -65,7 +65,14 @@ const Bag: React.FC<BagProps> = ({items, onItemClick, enableMaxStacks=true}) => 
     return <Grid sx={{display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center'}}>
         <Grid container spacing={1} columns={16} sx={{display: "flex", width: '600px', height: '300px'} }>
             {updatedBag.map((item: BagItem, index: number) => {
-                return <ItemDisplay key={item.name + index} item={item.name} value={item.count} onClick={handleItemClick.bind(this, index)}/>
+                return <ItemDisplay 
+                            key={item.name + index} 
+                            item={item.name} 
+                            value={PROVISION_COSTS[item.name]}
+                            showValue={isShop}
+                            amount={item.count} 
+                            onClick={handleItemClick.bind(this, index)}
+                        />
             })}
         </Grid>
     </Grid>

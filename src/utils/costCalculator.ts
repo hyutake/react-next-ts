@@ -1,5 +1,5 @@
 import { Provisions } from "@/models/expedition";
-import { PROVISION_COSTS } from "./constants";
+import { PROVISION_COSTS } from "./Constants/shop";
 
 export const calculateProvisionCost = (provisions: Provisions | undefined): number => {
     if(provisions) {

@@ -3,7 +3,7 @@ import { Provisions, SingleDungeonRec } from "@/models/expedition";
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Bag from "./Bag";
-import { SHOP_PROVISIONS } from "@/utils/constants";
+import { PROVISION_COSTS, SHOP_PROVISIONS } from "@/utils/Constants/shop";
 import Button from "../UI/Button";
 import { calculateProvisionCost } from "@/utils/costCalculator";
 
@@ -29,7 +29,7 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
         updateShopProvisions(recommendations?.provisions);
 
         setInventoryCost(calculateProvisionCost(recommendations?.provisions));
-    }, [recommendations, inventory])
+    }, [recommendations])
 
     const onShopItemClick = (item: keyof Provisions) => {
         setShopProvisions((prevState) => {
@@ -41,20 +41,30 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
         })
         setInventory((prevState) => {
             if(prevState == undefined) return;
-            return {
+            const newState = {
                 ...prevState,
                 [item]: prevState[item] + 1
             }
+            setInventoryCost((prevState) => {
+                if(prevState) return prevState + PROVISION_COSTS[item];
+                return;
+            });
+            return newState
         })
     }
 
     const onInventoryItemClick = (item: keyof Provisions) => {
         setInventory((prevState) => {
             if(prevState == undefined) return;
-            return {
+            const newState = {
                 ...prevState,
                 [item]: prevState[item] - 1
             }
+            setInventoryCost((prevState) => {
+                if(prevState) return prevState - PROVISION_COSTS[item];
+                return;
+            });
+            return newState
         })
         setShopProvisions((prevState) => {
             if(prevState == undefined) return;
@@ -62,7 +72,7 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
                 ...prevState,
                 [item]: prevState[item] + 1
             }
-        })
+        }) 
     }
 
     const updateShopProvisions = (prov: Provisions | undefined) => {
@@ -70,20 +80,20 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
         else {
             const baseShopProvisions: Provisions = SHOP_PROVISIONS[duration];
             setShopProvisions({
+                food: baseShopProvisions.food - prov.food,
+                shovel: baseShopProvisions.shovel - prov.shovel,
+                antivenom: baseShopProvisions.antivenom - prov.antivenom,
+                bandage: baseShopProvisions.bandage - prov.bandage,
+                medicinalHerb: baseShopProvisions.medicinalHerb - prov.medicinalHerb,
+                skeletonKey: baseShopProvisions.skeletonKey - prov.skeletonKey,
+                holyWater: baseShopProvisions.holyWater - prov.holyWater,
+                laudanum: baseShopProvisions.laudanum - prov.laudanum,
+                torch: baseShopProvisions.torch - prov.torch,
                 aegisScale: 0,
                 curseCure: 0,
                 dogTreats: 0,
                 fireWood: 0,
                 theBlood: 0,
-                antivenom: baseShopProvisions.antivenom - prov.antivenom,
-                bandage: baseShopProvisions.bandage - prov.bandage,
-                food: baseShopProvisions.food - prov.food,
-                holyWater: baseShopProvisions.holyWater - prov.holyWater,
-                laudanum: baseShopProvisions.laudanum - prov.laudanum,
-                medicinalHerb: baseShopProvisions.medicinalHerb - prov.medicinalHerb,
-                shovel: baseShopProvisions.shovel - prov.shovel,
-                skeletonKey: baseShopProvisions.skeletonKey - prov.skeletonKey,
-                torch: baseShopProvisions.torch - prov.torch
             })
         }
     };
@@ -93,15 +103,22 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
         setShowShop(prevState => !prevState);
     }
 
-    return <Grid sx={{display: "flex", justifyContent: "center", alignItems: 'center', flexDirection: 'column', rowGap: '12px'}}>
+    const saveInventory = () => {
+        console.log("saveInventory WIP!");
+    }
+
+    return <Grid sx={{display: "flex", justifyContent: "center", alignItems: 'center', flexDirection: 'column', rowGap: '24px'}}>
         {showShop && <Grid sx={{display: "flex", flexDirection: "column", rowGap: "12px"}}>
             <label style={{fontSize: '24px', lineHeight: '18px'}}>SHOP</label>
-            <Bag items={shopProvisions} onItemClick={onShopItemClick} enableMaxStacks={false}/>
+            <Bag items={shopProvisions} onItemClick={onShopItemClick} isShop={true}/>
         </Grid>} 
         <Grid sx={{display: "flex", flexDirection: "column", rowGap: "12px"}}>
             <Grid sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <label style={{fontSize: '24px', lineHeight: '18px'}}>INVENTORY <span style={{color: 'yellow'}}>({inventoryCost})</span></label>
-                <Button label={"Edit"} onClick={toggleView} />
+                <label style={{fontSize: '24px', lineHeight: '18px'}}>INVENTORY <span style={{color: 'gold'}}>({inventoryCost})</span></label>
+                <Grid sx={{display: 'flex', columnGap: '12px'}}>
+                    <Button label={showShop ? "Cancel" : "Edit"} onClick={toggleView} />
+                    {showShop && <Button label={"Save"} onClick={saveInventory}/>}
+                </Grid>
             </Grid>
             <Bag items={inventory} onItemClick={onInventoryItemClick}/>
         </Grid>

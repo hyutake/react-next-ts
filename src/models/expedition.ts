@@ -6,20 +6,40 @@ export interface Expedition {
 
 // strictly only for things that you would get from the shop prior to an expedition
 export interface Provisions {
-    aegisScale: number;
+    food: number;
+    shovel: number;
     antivenom: number;
     bandage: number;
-    curseCure: number;
-    dogTreats: number;
-    fireWood: number;
-    food: number;
+    medicinalHerb: number;
+    skeletonKey: number;
     holyWater: number;
     laudanum: number;
-    medicinalHerb: number;
-    shovel: number;
-    skeletonKey: number;
-    theBlood: number;
     torch: number;
+    fireWood: number;
+    dogTreats: number;
+    aegisScale: number;
+    curseCure: number;
+    theBlood: number;
+}
+
+export interface Loot {
+    gold: number;
+    bust: number;
+    crest: number;
+    deed: number;
+    portrait: number;
+    citrine: number;
+    onyx: number;
+    emerald: number;
+    jade: number;
+    sapphire: number;
+    ruby: number;
+    tapestry: number;
+    minorAntique: number;
+    rareAntique: number;
+    pewRelic: number;
+    trapezohedron: number;
+    shard: number;
 }
 
 export interface ProvisionsByDuration {
