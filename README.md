@@ -1,4 +1,5 @@
 ## Did this to practice nextJS & TypeScript
+Instructions to run: exec npm run dev
 
 ## Ideas:
 ### Keyboard-based game...?
