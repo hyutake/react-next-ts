@@ -10,12 +10,13 @@ import { calculateProvisionCost } from "@/utils/costCalculator";
 interface DungeonRecommendationsProps {
     recommendations: SingleDungeonRec | undefined;
     duration: DungeonLength;
+    updateRec: (newProvision: Provisions, newCost: number) => void;
 }
 
 // Need a 'normal' view and a 'edit' view
 const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
-    recommendations, duration
-}) => {
+    recommendations, duration, updateRec
+}) => { 
     const [showShop, setShowShop] = useState<boolean>(false);
 
     const [shopProvisions, setShopProvisions] = useState<Provisions>();
@@ -104,7 +105,16 @@ const DungeonRecommendations: React.FC<DungeonRecommendationsProps> = ({
     }
 
     const saveInventory = () => {
-        console.log("saveInventory WIP!");
+        if(inventory == undefined) {
+            console.error("inventory is undefined!");
+            return;
+        }
+        if(inventoryCost == undefined) {
+            console.error("inventoryCost is undefined!");
+            return;
+        }
+
+        updateRec(inventory, inventoryCost);
     }
 
     return <Grid sx={{display: "flex", justifyContent: "center", alignItems: 'center', flexDirection: 'column', rowGap: '24px'}}>

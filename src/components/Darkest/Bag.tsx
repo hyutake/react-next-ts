@@ -32,9 +32,9 @@ const Bag: React.FC<BagProps> = ({items, onItemClick, isShop=false}) => {
 
     const handleItemClick = (index: number) => {
         const item: BagItem = updatedBag[index];
-        Object.entries(item).forEach(([key, value]) => {
-            console.log(`${key}: ${value}`);
-        })
+        // Object.entries(item).forEach(([key, value]) => {
+        //     console.log(`${key}: ${value}`);
+        // })
 
         onItemClick(item.name);
     }

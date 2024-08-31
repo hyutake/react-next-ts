@@ -15,6 +15,10 @@ const User: React.FC = () => {
 		// sessionData: { sub: , token: , id: , iat: , exp: , jti: }
 		return (
 			<ul>
+				<li>
+					<strong>status: </strong>
+					{status}
+				</li>
 				{Object.keys(sessionData).map((key) => {
 					if (key === "iat" || key === "exp" || key === 'tokenExpiry') {
 						// iat & exp represent the # of seconds since EPOCH (1970-01-01T00:00:00Z) apparently

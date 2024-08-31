@@ -72,3 +72,23 @@ export const TEST_RECOMMENDATION: SingleDungeonRec = {
         "Crusader and Vestal have bonus % dmg against unholy type enemies"
     ]
 }
+
+export const mapDungeonToIndex = (dungeon: Dungeon | undefined) => {
+    if(!dungeon) return 0;
+    switch(dungeon) {
+        case Dungeon.RUINS:
+            return 0;
+        case Dungeon.WARRENS:
+            return 1;
+        case Dungeon.WEALD:
+            return 2;
+        case Dungeon.COVE:
+            return 3;
+        case Dungeon.COURTYARD:
+            return 4;
+        case Dungeon.FARMSTEAD:
+            return 5;
+        case Dungeon.DARKEST_DUNGEON:
+            return 6;
+    }
+}
